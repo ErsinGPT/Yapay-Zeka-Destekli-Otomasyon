@@ -10,6 +10,29 @@ Proje odaklı çalışan firmalar için geliştirilmiş geniş kapsamlı **CRM (
 - **Finans Modülü:** Fatura oluşturma (PDF), gelir/gider takibi ve TCMB döviz entegrasyonu.
 - **Operasyon Dosyaları:** Teknik servis formları ve sevkiyat irsaliyeleri.
 
+## 🔮 Gelecek Planları
+
+### 🤖 Yapay Zeka Entegrasyonu
+- **Akıllı Arama Barı:** Sayfadaki fonksiyonlar bulunamadığında yapay zeka tarafından otomatik yönlendirme yapılacak
+- **Text-to-SQL Raporlama:** Raporlar sayfasındaki arama barı üzerinden doğal dil ile özel raporlar oluşturulabilecek
+
+### 📦 Stok & Depo Modülü
+- [ ] Ürünler sayfası ve API endpointleri
+- [ ] Depolar sayfası ve API endpointleri
+- [ ] Stok Hareketleri sayfası ve API endpointleri
+
+### 🔧 Operasyon Modülü
+- [ ] Servis Formları sayfası ve API endpointleri
+- [ ] Transferler (Sevkiyat İrsaliyeleri) sayfası ve API endpointleri
+
+### 💰 Finans Modülü
+- [ ] Faturalar sayfası ve API endpointleri
+- [ ] Masraflar sayfası ve API endpointleri
+
+### 📊 Raporlama & Ayarlar
+- [ ] Raporlar sayfası ve API endpointleri
+- [ ] Ayarlar sayfası ve API endpointleri
+
 ## 🛠️ Kurulum ve Çalıştırma
 
 ### 1. Backend Kurulumu (FastAPI)
