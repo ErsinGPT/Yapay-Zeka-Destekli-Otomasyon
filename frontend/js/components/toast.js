@@ -1,5 +1,5 @@
 /**
- * Betsan CRM - Toast Notifications
+ * Otomasyon CRM - Toast Notifications
  */
 
 const Toast = {

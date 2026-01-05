@@ -1,5 +1,5 @@
 /**
- * Betsan CRM - API Client
+ * Otomasyon CRM - API Client
  */
 
 const API = {

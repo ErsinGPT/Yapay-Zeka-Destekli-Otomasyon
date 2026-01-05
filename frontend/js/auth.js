@@ -1,5 +1,5 @@
 /**
- * Betsan CRM - Authentication Module
+ * Otomasyon CRM - Authentication Module
  */
 
 const Auth = {

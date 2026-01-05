@@ -1,5 +1,5 @@
 /**
- * Betsan CRM - Sidebar Component
+ * Otomasyon CRM - Sidebar Component
  */
 
 const Sidebar = {
@@ -20,7 +20,7 @@ const Sidebar = {
                             <rect width="36" height="36" rx="8" fill="#3498DB"/>
                             <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="16" font-weight="bold">B</text>
                         </svg>
-                        <span>Betsan CRM</span>
+                        <span>Otomasyon CRM</span>
                     </div>
                 </div>
                 

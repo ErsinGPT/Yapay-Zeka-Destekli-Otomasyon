@@ -1,5 +1,5 @@
 /**
- * Betsan CRM - DataTable Component
+ * Otomasyon CRM - DataTable Component
  */
 
 const DataTable = {

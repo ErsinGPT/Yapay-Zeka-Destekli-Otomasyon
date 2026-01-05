@@ -1,5 +1,5 @@
 /**
- * Betsan CRM - Main Application
+ * Otomasyon CRM - Main Application
  */
 
 const App = {

@@ -1,5 +1,5 @@
 /**
- * Betsan CRM - Header Component
+ * Otomasyon CRM - Header Component
  */
 
 const Header = {
@@ -18,7 +18,7 @@ const Header = {
                         </svg>
                     </button>
                     <nav class="breadcrumb">
-                        <span class="breadcrumb-item">Betsan CRM</span>
+                        <span class="breadcrumb-item">Otomasyon CRM</span>
                         <span class="breadcrumb-separator">/</span>
                         <span class="breadcrumb-item active">Dashboard</span>
                     </nav>

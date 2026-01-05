@@ -1,5 +1,5 @@
 /**
- * Betsan CRM - Utility Functions
+ * Otomasyon CRM - Utility Functions
  */
 
 const Utils = {

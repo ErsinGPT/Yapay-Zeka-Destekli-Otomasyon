@@ -1,5 +1,5 @@
 /**
- * Betsan CRM - Modal Component
+ * Otomasyon CRM - Modal Component
  */
 
 const Modal = {
