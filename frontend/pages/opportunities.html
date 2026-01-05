@@ -595,11 +595,21 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Durum</label>
-                                    <select class="form-select" name="status">
-                                        ${Object.entries(statusLabels).map(([key, label]) =>
-                `<option value="${key}" ${opp.status === key ? 'selected' : ''}>${label}</option>`
-            ).join('')}
+                                    <select class="form-select" name="status" ${opp.status === 'WON' || opp.status === 'LOST' ? 'disabled' : ''}>
+                                        ${Object.entries(statusLabels)
+                    .filter(([key]) => key !== 'WON' && key !== 'LOST')
+                    .map(([key, label]) =>
+                        `<option value="${key}" ${opp.status === key ? 'selected' : ''}>${label}</option>`
+                    ).join('')}
                                     </select>
+                                    ${opp.status === 'WON' || opp.status === 'LOST' ?
+                    `<small style="color: var(--text-muted); margin-top: 4px; display: block;">
+                                            ⚠️ Kazanıldı/Kaybedildi durumları değiştirilemez
+                                        </small>` :
+                    `<small style="color: var(--text-muted); margin-top: 4px; display: block;">
+                                            💡 Kazanıldı/Kaybedildi için tablodaki özel butonları kullanın
+                                        </small>`
+                }
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Olasılık (%)</label>
