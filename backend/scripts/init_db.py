@@ -4,10 +4,23 @@ Run this to create all tables
 """
 import sys
 import os
+import argparse
+
+# Parse arguments FIRST, before any imports
+parser = argparse.ArgumentParser(description="Initialize Otomasyon CRM database")
+parser.add_argument("--seed", action="store_true", help="Seed initial data")
+parser.add_argument("--test", action="store_true", help="Use test database (SQLite)")
+
+args = parser.parse_args()
+
+# Set environment BEFORE importing app modules
+if args.test:
+    os.environ["ENVIRONMENT"] = "testing"
 
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# Now import app modules (they will use the correct environment)
 from app.database import Base, engine, create_tables
 from app.models import *  # Import all models to register them
 from app.config import settings
