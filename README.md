@@ -15,6 +15,7 @@ Proje odaklı çalışan firmalar için geliştirilmiş geniş kapsamlı **CRM (
 ### 🤖 Yapay Zeka Entegrasyonu
 - **Akıllı Arama Barı:** Sayfadaki fonksiyonlar bulunamadığında yapay zeka tarafından otomatik yönlendirme yapılacak
 - **Text-to-SQL Raporlama:** Raporlar sayfasındaki arama barı üzerinden doğal dil ile özel raporlar oluşturulabilecek
+- **Eksik Fonksiyonlar:** Sayfalarda bulunan eksik fonksiyonlar eklenecek
 
 ### 📦 Stok & Depo Modülü
 - [ ] Ürünler sayfası ve API endpointleri
