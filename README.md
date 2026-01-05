@@ -1,55 +1,69 @@
 # Otomasyon CRM
 
-Proje Odaklı CRM, Sanal Depo ve Finansal Entegrasyon Modülü
+Proje odaklı çalışan firmalar için geliştirilmiş geniş kapsamlı **CRM (Müşteri İlişkileri Yönetimi)**, **Sanal Depo** ve **Finansal Entegrasyon** modülüdür.
 
-## Kurulum
+## 🚀 Özellikler
 
-### Backend
+- **Müşteri ve Fırsat Yönetimi:** Satış süreçlerini ve potansiyel projeleri takip edin.
+- **Proje Yönetimi:** Kazanılan projelerin üretim ve teslimat süreçlerini yönetin.
+- **Stok & Depo Otomasyonu:** Barkod destekli stok takibi, depo transferleri ve rezervasyon sistemi.
+- **Finans Modülü:** Fatura oluşturma (PDF), gelir/gider takibi ve TCMB döviz entegrasyonu.
+- **Operasyon Dosyaları:** Teknik servis formları ve sevkiyat irsaliyeleri.
+
+## 🛠️ Kurulum ve Çalıştırma
+
+### 1. Backend Kurulumu (FastAPI)
 
 ```bash
 cd backend
 python -m venv venv
 venv\Scripts\activate  # Windows
+# source venv/bin/activate  # Linux/Mac
 pip install -r requirements.txt
-copy .env.example .env  # Ayarları düzenle
+copy .env.example .env  # Ayarları ihtiyacınıza göre düzenleyin
+```
+
+**Veritabanı Başlatma (SQLite/SQLite):**
+```bash
+python scripts/init_db.py --test --seed
+```
+*Bu komut tabloları oluşturur ve `admin@otomasyon.com` (şifre: `admin123`) kullanıcısını tanımlar.*
+
+**Sunucuyu Başlatma:**
+```bash
 python -m uvicorn app.main:app --reload
 ```
 
-### Frontend
+### 2. Frontend Çalıştırma (Vanilla JS)
 
-Frontend statik HTML/CSS/JS dosyalarından oluşmaktadır. Herhangi bir HTTP server ile çalıştırılabilir:
+Frontend tarafı herhangi bir derleme (build) işlemi gerektirmez. Basit bir HTTP sunucusu ile çalıştırılabilir:
 
+**Python ile hızlı başlatma:**
 ```bash
 cd frontend
-python -m http.server 3000
+python -m http.server 5500
+```
+Daha sonra tarayıcınızdan `http://localhost:5500` adresine giderek uygulamaya erişebilirsiniz.
+
+---
+
+## 📂 Proje Yapısı
+
+```
+Otomasyon CRM/
+├── backend/            # FastAPI Backend
+│   ├── app/            # Uygulama mantığı
+│   ├── scripts/        # Veritabanı ve yardımcı scriptler
+│   └── tests/          # Pytest ünit testleri
+└── frontend/           # Statik Frontend
+    ├── css/            # Modern CSS Tasarımları
+    ├── js/             # Vanilla JS API Entegrasyonu
+    └── pages/          # HTML Sayfa Şablonları
 ```
 
-## Proje Yapısı
+## 🏗️ Kullanılan Teknolojiler
 
-```
-betsan/
-├── backend/
-│   ├── app/
-│   │   ├── models/         # SQLAlchemy modelleri
-│   │   ├── schemas/        # Pydantic şemaları
-│   │   ├── routers/        # API endpoint'leri
-│   │   ├── services/       # İş mantığı
-│   │   ├── integrations/   # Harici API'ler (TCMB, e-Fatura)
-│   │   └── utils/          # Yardımcı fonksiyonlar
-│   ├── alembic/            # Veritabanı migration'ları
-│   └── tests/              # Test dosyaları
-│
-└── frontend/
-    ├── css/                # Stil dosyaları
-    ├── js/                 # JavaScript dosyaları
-    ├── pages/              # HTML sayfaları
-    └── assets/             # Görseller, ikonlar
-```
-
-## Teknolojiler
-
-- **Backend:** FastAPI, SQLAlchemy, PostgreSQL
-- **Frontend:** Vanilla HTML, CSS, JavaScript
-- **Auth:** JWT
-- **PDF:** ReportLab
-- **Barkod:** python-barcode, qrcode
+- **Backend:** FastAPI, SQLAlchemy, Pydantic, SQLite/PostgreSQL
+- **Frontend:** HTML5, CSS3, JavaScript (ES6+)
+- **Güvenlik:** JWT (JSON Web Token)
+- **Raporlama:** ReportLab (PDF), python-barcode, qrcode
