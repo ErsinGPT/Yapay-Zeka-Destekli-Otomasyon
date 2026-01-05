@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Müşteriler - Otomasyon CRM</title>
+    <title>Masraflar - Otomasyon CRM</title>
 
     <!-- CSS Files -->
     <link rel="stylesheet" href="../css/variables.css">
@@ -238,7 +238,7 @@
                     <div class="breadcrumb">
                         <span class="breadcrumb-item">Otomasyon CRM</span>
                         <span class="breadcrumb-separator">/</span>
-                        <span class="breadcrumb-item active">Müşteriler</span>
+                        <span class="breadcrumb-item active">Masraflar</span>
                     </div>
                 </div>
                 <div class="header-search">
@@ -252,7 +252,7 @@
                             <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                         </svg>
                     </div>
-                    <div class="user-menu" onclick="API.auth.logout().then(() => window.location.href = 'login.html')">
+                    <div class="user-menu">
                         <div class="user-avatar" id="user-avatar">A</div>
                         <div class="user-info">
                             <span class="user-name" id="user-name">admin@otomasyon.com</span>
@@ -263,54 +263,11 @@
 
             <!-- Main Content -->
             <main class="main-content">
-                <!-- Page Header -->
-                <div class="page-header">
-                    <div>
-                        <h1 class="page-title">Müşteriler</h1>
-                        <p class="page-subtitle">Tüm müşterilerinizi yönetin</p>
-                    </div>
-                    <div class="page-actions">
-                        <button class="btn btn-primary" onclick="openCreateModal()">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                            </svg>
-                            Yeni Müşteri
-                        </button>
-                    </div>
-                </div>
 
-                <!-- Filters Card -->
-                <div class="content-card" style="margin-bottom: var(--spacing-lg);">
-                    <div class="content-card-body" style="padding: var(--spacing-md);">
-                        <div class="form-inline">
-                            <div class="form-group" style="flex: 1; max-width: 300px;">
-                                <input type="text" class="form-input" id="search-input" placeholder="Müşteri ara...">
-                            </div>
-                            <div class="form-group">
-                                <select class="form-select" id="status-filter">
-                                    <option value="">Tüm Durumlar</option>
-                                    <option value="true">Aktif</option>
-                                    <option value="false">Pasif</option>
-                                </select>
-                            </div>
-                            <button class="btn btn-outline" onclick="loadCustomers()">Filtrele</button>
-                        </div>
-                    </div>
-                </div>
+                <!-- ============================================= -->
+                <!-- BURAYA SAYFA İÇERİĞİ GELİR -->
+                <!-- ============================================= -->
 
-                <!-- Data Table Card -->
-                <div class="content-card">
-                    <div class="content-card-body" style="padding: 0;">
-                        <div class="data-table-wrapper" id="table-container">
-                            <div class="empty-state">
-                                <div class="empty-state-icon">⏳</div>
-                                <div class="empty-state-title">Yükleniyor...</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </main>
         </div>
     </div>
@@ -322,16 +279,15 @@
     <script src="../js/api.js"></script>
     <script src="../js/utils.js"></script>
     <script>
-        let customers = [];
-
-        // Check auth on load
+        // Auth check
         document.addEventListener('DOMContentLoaded', function () {
             if (!API.getToken()) {
                 window.location.href = 'login.html';
                 return;
             }
             loadUserInfo();
-            loadCustomers();
+            setActiveNav();
+            // Sayfa init fonksiyonunu burada çağır
         });
 
         async function loadUserInfo() {
@@ -344,237 +300,34 @@
             }
         }
 
-        async function loadCustomers() {
-            const container = document.getElementById('table-container');
-
-            try {
-                const search = document.getElementById('search-input').value;
-                const statusFilter = document.getElementById('status-filter').value;
-
-                let params = {};
-                if (search) params.search = search;
-                if (statusFilter) params.is_active = statusFilter;
-
-                customers = await API.get('/customers', params);
-                renderTable(customers);
-            } catch (error) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">⚠️</div>
-                        <div class="empty-state-title">Yüklenemedi</div>
-                        <div class="empty-state-message">${error.message}</div>
-                    </div>
-                `;
-            }
+        // Aktif navigasyon öğesini işaretle
+        function setActiveNav() {
+            const currentPage = window.location.pathname.split('/').pop().replace('.html', '');
+            document.querySelectorAll('.nav-item').forEach(item => {
+                if (item.dataset.page === currentPage) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
         }
 
-        function renderTable(data) {
-            const container = document.getElementById('table-container');
-
-            if (data.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">👥</div>
-                        <div class="empty-state-title">Henüz müşteri yok</div>
-                        <div class="empty-state-message">Yeni müşteri ekleyerek başlayın</div>
-                        <button class="btn btn-primary" style="margin-top: var(--spacing-md);" onclick="openCreateModal()">
-                            Yeni Müşteri Ekle
-                        </button>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = `
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Müşteri Adı</th>
-                            <th>E-posta</th>
-                            <th>Telefon</th>
-                            <th>Şehir</th>
-                            <th>Durum</th>
-                            <th style="text-align: right;">İşlemler</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${data.map(customer => `
-                            <tr>
-                                <td>
-                                    <div style="display: flex; align-items: center; gap: var(--spacing-sm);">
-                                        <div class="avatar avatar-sm">${customer.name.charAt(0)}</div>
-                                        <div>
-                                            <strong>${customer.name}</strong>
-                                            ${customer.contact_person ? `<div style="font-size: var(--font-size-xs); color: var(--text-muted);">${customer.contact_person}</div>` : ''}
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>${customer.email || '-'}</td>
-                                <td>${customer.phone || '-'}</td>
-                                <td>${customer.city || '-'}</td>
-                                <td>
-                                    <span class="status-badge ${customer.is_active ? 'success' : 'danger'}">
-                                        ${customer.is_active ? 'Aktif' : 'Pasif'}
-                                    </span>
-                                </td>
-                                <td style="text-align: right;">
-                                    <button class="btn btn-ghost btn-sm" onclick="editCustomer(${customer.id})">Düzenle</button>
-                                </td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
+        // Mobile sidebar toggle
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('show');
+            document.querySelector('.sidebar-overlay').classList.toggle('show');
         }
 
-        function openCreateModal() {
-            document.body.style.overflow = 'hidden';
-            document.getElementById('modal-container').innerHTML = `
-                <div class="modal-overlay show" onclick="closeModal(event)">
-                    <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 500px;">
-                        <div class="modal-header">
-                            <h3>Yeni Müşteri</h3>
-                            <button class="modal-close" onclick="closeModal()">&times;</button>
-                        </div>
-                        <form onsubmit="createCustomer(event)">
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <label class="form-label required">Müşteri Adı</label>
-                                    <input type="text" class="form-input" name="name" required>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">E-posta</label>
-                                    <input type="email" class="form-input" name="email">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Telefon</label>
-                                    <input type="text" class="form-input" name="phone">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Yetkili Kişi</label>
-                                    <input type="text" class="form-input" name="contact_person">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Şehir</label>
-                                    <input type="text" class="form-input" name="city">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Vergi No</label>
-                                    <input type="text" class="form-input" name="tax_id">
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-ghost" onclick="closeModal()">İptal</button>
-                                <button type="submit" class="btn btn-primary">Kaydet</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            `;
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('show');
+            document.querySelector('.sidebar-overlay').classList.remove('show');
         }
 
+        // Modal helpers
         function closeModal(event) {
             if (event && event.target !== event.currentTarget) return;
             document.getElementById('modal-container').innerHTML = '';
-            document.body.style.overflow = '';
         }
-
-        async function createCustomer(event) {
-            event.preventDefault();
-            const form = event.target;
-            const formData = new FormData(form);
-
-            const data = {};
-            formData.forEach((value, key) => {
-                if (value) data[key] = value;
-            });
-
-            try {
-                await API.post('/customers', data);
-                closeModal();
-                alert('Müşteri başarıyla oluşturuldu');
-                loadCustomers();
-            } catch (error) {
-                alert(error.message || 'Bir hata oluştu');
-            }
-        }
-
-        function editCustomer(id) {
-            const customer = customers.find(c => c.id === id);
-            if (!customer) return;
-
-            document.body.style.overflow = 'hidden';
-            document.getElementById('modal-container').innerHTML = `
-                <div class="modal-overlay show" onclick="closeModal(event)">
-                    <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 500px;">
-                        <div class="modal-header">
-                            <h3>Müşteri Düzenle</h3>
-                            <button class="modal-close" onclick="closeModal()">&times;</button>
-                        </div>
-                        <form onsubmit="updateCustomer(event, ${id})">
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <label class="form-label required">Müşteri Adı</label>
-                                    <input type="text" class="form-input" name="name" value="${customer.name}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">E-posta</label>
-                                    <input type="email" class="form-input" name="email" value="${customer.email || ''}">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Telefon</label>
-                                    <input type="text" class="form-input" name="phone" value="${customer.phone || ''}">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Şehir</label>
-                                    <input type="text" class="form-input" name="city" value="${customer.city || ''}">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Durum</label>
-                                    <select class="form-select" name="is_active">
-                                        <option value="true" ${customer.is_active ? 'selected' : ''}>Aktif</option>
-                                        <option value="false" ${!customer.is_active ? 'selected' : ''}>Pasif</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-ghost" onclick="closeModal()">İptal</button>
-                                <button type="submit" class="btn btn-primary">Güncelle</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            `;
-        }
-
-        async function updateCustomer(event, id) {
-            event.preventDefault();
-            const form = event.target;
-            const formData = new FormData(form);
-
-            const data = {};
-            formData.forEach((value, key) => {
-                if (key === 'is_active') {
-                    data[key] = value === 'true';
-                } else if (value) {
-                    data[key] = value;
-                }
-            });
-
-            try {
-                await API.put(`/customers/${id}`, data);
-                closeModal();
-                alert('Müşteri güncellendi');
-                loadCustomers();
-            } catch (error) {
-                alert(error.message || 'Bir hata oluştu');
-            }
-        }
-
-        // Enter key search
-        document.getElementById('search-input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') loadCustomers();
-        });
     </script>
 </body>
 
