@@ -1,0 +1,16 @@
+# Python gereksiz dosyalari
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ortam degiskenleri 
+.env
+.venv
+env/
+venv/
+ENV/
+
+# IDE dosyalari (VS Code vs)
+.vscode/
+.idea/

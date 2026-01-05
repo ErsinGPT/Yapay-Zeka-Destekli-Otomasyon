@@ -1,0 +1,212 @@
+/**
+ * Betsan CRM - Table Styles
+ */
+
+/* ===== DATA TABLE ===== */
+.data-table-wrapper {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
+}
+
+.data-table th,
+.data-table td {
+    padding: var(--spacing-sm) var(--spacing-md);
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table th {
+    background: var(--gray-50);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-secondary);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.data-table tbody tr {
+    transition: background var(--transition-fast);
+}
+
+.data-table tbody tr:hover {
+    background: var(--gray-50);
+}
+
+.data-table tbody tr.selected {
+    background: rgba(52, 152, 219, 0.05);
+}
+
+/* Sortable columns */
+.data-table th.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.data-table th.sortable:hover {
+    background: var(--gray-100);
+}
+
+.data-table th .sort-icon {
+    margin-left: var(--spacing-xs);
+    opacity: 0.3;
+}
+
+.data-table th.sorted .sort-icon {
+    opacity: 1;
+    color: var(--primary);
+}
+
+/* Row actions */
+.table-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+    justify-content: flex-end;
+}
+
+/* Clickable rows */
+.data-table.clickable tbody tr {
+    cursor: pointer;
+}
+
+/* Compact table */
+.data-table.compact th,
+.data-table.compact td {
+    padding: var(--spacing-xs) var(--spacing-sm);
+}
+
+/* Striped table */
+.data-table.striped tbody tr:nth-child(even) {
+    background: var(--gray-50);
+}
+
+/* ===== TABLE TOOLBAR ===== */
+.table-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.table-toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.table-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+/* ===== PAGINATION ===== */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+}
+
+.pagination-info {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.pagination-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: var(--gray-50);
+    border-color: var(--border-dark);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--white);
+}
+
+/* ===== TABLE FILTERS ===== */
+.table-filters {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+.filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--gray-100);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+}
+
+.filter-chip-remove {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background var(--transition-fast);
+}
+
+.filter-chip-remove:hover {
+    background: var(--gray-300);
+}
+
+/* ===== BULK ACTIONS ===== */
+.bulk-actions {
+    display: none;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: rgba(52, 152, 219, 0.1);
+    border-radius: var(--radius-md);
+}
+
+.bulk-actions.show {
+    display: flex;
+}
+
+.bulk-actions-count {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--secondary);
+}

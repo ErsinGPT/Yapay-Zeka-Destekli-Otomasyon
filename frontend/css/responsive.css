@@ -1,0 +1,189 @@
+/**
+ * Betsan CRM - Responsive Styles
+ * Mobile and tablet breakpoints
+ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    :root {
+        --sidebar-width: 70px;
+    }
+
+    .sidebar {
+        width: var(--sidebar-width);
+    }
+
+    .sidebar-logo span,
+    .nav-section-title,
+    .nav-item-text,
+    .nav-item-badge {
+        display: none;
+    }
+
+    .nav-item {
+        justify-content: center;
+        padding: var(--spacing-md);
+    }
+
+    .main-wrapper {
+        margin-left: var(--sidebar-width);
+    }
+
+    .header-search {
+        display: none;
+    }
+
+    .user-info {
+        display: none;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    :root {
+        --sidebar-width: 0;
+    }
+
+    .sidebar {
+        transform: translateX(-100%);
+        width: 260px;
+    }
+
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: calc(var(--z-fixed) - 1);
+    }
+
+    .sidebar.mobile-open+.sidebar-overlay {
+        display: block;
+    }
+
+    .main-wrapper {
+        margin-left: 0;
+    }
+
+    .header {
+        padding: 0 var(--spacing-md);
+    }
+
+    .main-content {
+        padding: var(--spacing-md);
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+    }
+
+    .page-actions {
+        width: 100%;
+    }
+
+    .page-actions .btn {
+        flex: 1;
+    }
+
+    /* Table responsive */
+    .data-table-wrapper {
+        margin: 0 calc(var(--spacing-md) * -1);
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: var(--spacing-sm);
+    }
+
+    /* Hide less important columns on mobile */
+    .data-table .hide-mobile {
+        display: none;
+    }
+
+    /* Stack form groups */
+    .form-inline {
+        flex-direction: column;
+    }
+
+    .form-inline .form-group {
+        width: 100%;
+    }
+
+    /* Pagination */
+    .pagination {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+
+    .pagination-info {
+        order: 2;
+    }
+
+    /* Modal full screen on mobile */
+    .modal-dialog {
+        margin: 0;
+        max-width: 100%;
+        min-height: 100vh;
+        border-radius: 0;
+    }
+
+    /* Stat cards grid */
+    .stat-cards-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+    .btn {
+        padding: var(--spacing-sm);
+        font-size: var(--font-size-xs);
+    }
+
+    .page-title {
+        font-size: var(--font-size-xl);
+    }
+
+    /* Stack table actions */
+    .table-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .table-toolbar-left,
+    .table-toolbar-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+/* Print styles */
+@media print {
+
+    .sidebar,
+    .header,
+    .page-actions,
+    .table-toolbar,
+    .pagination {
+        display: none !important;
+    }
+
+    .main-wrapper {
+        margin-left: 0;
+    }
+
+    .main-content {
+        padding: 0;
+    }
+
+    .content-card {
+        box-shadow: none;
+        border: none;
+    }
+}

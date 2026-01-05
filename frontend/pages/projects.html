@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJELER - Otomasyon CRM</title>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/forms.css">
+    <link rel="stylesheet" href="../css/tables.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/login.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                        <rect width="36" height="36" rx="8" fill="#3498DB" />
+                        <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="white"
+                            font-size="16" font-weight="bold">B</text>
+                    </svg>
+                    <span>Otomasyon CRM</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <!-- ANA MENÜ -->
+                <div class="nav-section">
+                    <div class="nav-section-title">Ana Menü</div>
+                    <a href="../index.html" class="nav-item" data-page="dashboard">
+                        <span class="nav-item-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                        </span>
+                        <span class="nav-item-text">Dashboard</span>
+                    </a>
+                </div>
+
+                <!-- CRM -->
+                <div class="nav-section">
+                    <div class="nav-section-title">CRM</div>
+                    <a href="customers.html" class="nav-item" data-page="customers">
+                        <span class="nav-item-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </span>
+                        <span class="nav-item-text">Müşteriler</span>
+                    </a>
+                    <a href="opportunities.html" class="nav-item" data-page="opportunities">
+                        <span class="nav-item-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polygon
+                                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                                </polygon>
+                            </svg>
+                        </span>
+                        <span class="nav-item-text">Fırsatlar</span>
+                    </a>
+                    <a href="projects.html" class="nav-item" data-page="projects">
+                        <span class="nav-item-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z">
+                                </path>
+                            </svg>
+                        </span>
+                        <span class="nav-item-text">Projeler</span>
+                    </a>
+                </div>
+
+                <!-- STOK & DEPO -->
+                <div class="nav-section">
+                    <div class="nav-section-title">Stok & Depo</div>
+                    <a href="products.html" class="nav-item" data-page="products">
+                        <span class="nav-item-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path
+                                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                                </path>
+                            </svg>
+                        </span>
+                        <span class="nav-item-text">Ürünler</span>
+                    </a>
+                    <a href="warehouses.html" class="nav-item" data-page="warehouses">
+                        <span class="nav-item-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                        </span>
+                        <span class="nav-item-text">Depolar</span>
+                    </a>
+                    <a href="stock-movements.html" class="nav-item" data-page="stock-movements">
+                        <span class="nav-item-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="17 1 21 5 17 9"></polyline>
+                                <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+                                <polyline points="7 23 3 19 7 15"></polyline>
+                                <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+                            </svg>
+                        </span>
+                        <span class="nav-item-text">Stok Hareketleri</span>
+                    </a>
+                </div>
+
+                <!-- OPERASYON -->
+                <div class="nav-section">
+                    <div class="nav-section-title">Operasyon</div>
+                    <a href="service-forms.html" class="nav-item" data-page="service-forms">
+                        <span class="nav-item-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path
+                                    d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z">
+                                </path>
+                            </svg>
+                        </span>
+                        <span class="nav-item-text">Servis Formları</span>
+                    </a>
+                    <a href="transfers.html" class="nav-item" data-page="transfers">
+                        <span class="nav-item-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="1" y="3" width="15" height="13"></rect>
+                                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                            </svg>
+                        </span>
+                        <span class="nav-item-text">Transferler</span>
+                    </a>
+                </div>
+
+                <!-- FİNANS -->
+                <div class="nav-section">
+                    <div class="nav-section-title">Finans</div>
+                    <a href="invoices.html" class="nav-item" data-page="invoices">
+                        <span class="nav-item-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                        </span>
+                        <span class="nav-item-text">Faturalar</span>
+                    </a>
+                    <a href="expenses.html" class="nav-item" data-page="expenses">
+                        <span class="nav-item-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                            </svg>
+                        </span>
+                        <span class="nav-item-text">Masraflar</span>
+                    </a>
+                </div>
+
+                <!-- RAPORLAR -->
+                <div class="nav-section">
+                    <div class="nav-section-title">Raporlar</div>
+                    <a href="reports.html" class="nav-item" data-page="reports">
+                        <span class="nav-item-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <line x1="18" y1="20" x2="18" y2="10"></line>
+                                <line x1="12" y1="20" x2="12" y2="4"></line>
+                                <line x1="6" y1="20" x2="6" y2="14"></line>
+                            </svg>
+                        </span>
+                        <span class="nav-item-text">Raporlar</span>
+                    </a>
+                </div>
+            </nav>
+
+            <!-- AYARLAR (Footer) -->
+            <div class="sidebar-footer">
+                <a href="settings.html" class="nav-item" data-page="settings">
+                    <span class="nav-item-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path
+                                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                            </path>
+                        </svg>
+                    </span>
+                    <span class="nav-item-text">Ayarlar</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Sidebar Overlay for Mobile -->
+        <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="header-toggle" onclick="Sidebar.open()" title="Menü">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <div class="breadcrumb">
+                        <span class="breadcrumb-item">Otomasyon CRM</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-item active">Projeler</span>
+                    </div>
+                </div>
+                <div class="header-search">
+                    <input type="text" class="search-input" placeholder="Ara...">
+                </div>
+                <div class="header-right">
+                    <div class="header-icon-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                    </div>
+                    <div class="user-menu" onclick="API.auth.logout().then(() => window.location.href = 'login.html')">
+                        <div class="user-avatar" id="user-avatar">A</div>
+                        <div class="user-info">
+                            <span class="user-name" id="user-name">admin@otomasyon.com</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Projeler</h1>
+                        <p class="page-subtitle">Waterfall yaşam döngüsü ile proje takibi</p>
+                    </div>
+                </div>
+
+                <!-- Filters Card -->
+                <div class="content-card" style="margin-bottom: var(--spacing-lg);">
+                    <div class="content-card-body" style="padding: var(--spacing-md);">
+                        <div class="form-inline">
+                            <div class="form-group" style="flex: 1; max-width: 250px;">
+                                <input type="text" class="form-input" id="search-input"
+                                    placeholder="Proje kodu veya adı...">
+                            </div>
+                            <div class="form-group">
+                                <select class="form-select" id="status-filter">
+                                    <option value="">Tüm Durumlar</option>
+                                    <option value="WON">Kazanıldı</option>
+                                    <option value="ENGINEERING">Mühendislik</option>
+                                    <option value="PROCUREMENT">Tedarik</option>
+                                    <option value="ASSEMBLY">Montaj</option>
+                                    <option value="TESTING">Test</option>
+                                    <option value="SHIPPING">Sevkiyat</option>
+                                    <option value="COMMISSIONING">Devreye Alma</option>
+                                    <option value="COMPLETED">Tamamlandı</option>
+                                    <option value="INVOICED">Faturalandı</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-outline" onclick="loadProjects()">Filtrele</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Table Card -->
+                <div class="content-card">
+                    <div class="content-card-body" style="padding: 0;">
+                        <div class="data-table-wrapper" id="table-container">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">⏳</div>
+                                <div class="empty-state-title">Yükleniyor...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Container -->
+    <div id="modal-container"></div>
+
+    <!-- Scripts -->
+    <script src="../js/api.js"></script>
+    <script src="../js/utils.js"></script>
+    <script>
+        let projects = [];
+
+        const statusLabels = {
+            'OPPORTUNITY': 'Fırsat',
+            'WON': 'Kazanıldı',
+            'ENGINEERING': 'Mühendislik',
+            'PROCUREMENT': 'Tedarik',
+            'ASSEMBLY': 'Montaj',
+            'TESTING': 'Test',
+            'SHIPPING': 'Sevkiyat',
+            'COMMISSIONING': 'Devreye Alma',
+            'COMPLETED': 'Tamamlandı',
+            'INVOICED': 'Faturalandı'
+        };
+
+        const statusColors = {
+            'OPPORTUNITY': 'info',
+            'WON': 'success',
+            'ENGINEERING': 'warning',
+            'PROCUREMENT': 'warning',
+            'ASSEMBLY': 'warning',
+            'TESTING': 'warning',
+            'SHIPPING': 'info',
+            'COMMISSIONING': 'info',
+            'COMPLETED': 'success',
+            'INVOICED': 'success'
+        };
+
+        const statusOrder = ['OPPORTUNITY', 'WON', 'ENGINEERING', 'PROCUREMENT', 'ASSEMBLY', 'TESTING', 'SHIPPING', 'COMMISSIONING', 'COMPLETED', 'INVOICED'];
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if (!API.getToken()) {
+                window.location.href = 'login.html';
+                return;
+            }
+            loadUserInfo();
+            loadProjects();
+        });
+
+        async function loadUserInfo() {
+            try {
+                const user = await API.auth.me();
+                document.getElementById('user-name').textContent = user.full_name || user.email;
+                document.getElementById('user-avatar').textContent = (user.full_name || user.email).charAt(0).toUpperCase();
+            } catch (error) {
+                console.error('Failed to load user:', error);
+            }
+        }
+
+        async function loadProjects() {
+            const container = document.getElementById('table-container');
+
+            try {
+                const search = document.getElementById('search-input').value;
+                const statusFilter = document.getElementById('status-filter').value;
+
+                let params = {};
+                if (search) params.search = search;
+                if (statusFilter) params.status = statusFilter;
+
+                projects = await API.get('/projects', params);
+                renderTable(projects);
+            } catch (error) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⚠️</div>
+                        <div class="empty-state-title">Yüklenemedi</div>
+                        <div class="empty-state-message">${error.message}</div>
+                    </div>
+                `;
+            }
+        }
+
+        function renderTable(data) {
+            const container = document.getElementById('table-container');
+
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📁</div>
+                        <div class="empty-state-title">Henüz proje yok</div>
+                        <div class="empty-state-message">Projeler, fırsatlar "Kazanıldı" olarak işaretlendiğinde otomatik oluşturulur</div>
+                        <a href="opportunities.html" class="btn btn-primary" style="margin-top: var(--spacing-md);">
+                            Fırsatlara Git
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Proje Kodu</th>
+                            <th>Proje Adı</th>
+                            <th>Müşteri</th>
+                            <th>Sözleşme Tutarı</th>
+                            <th>Durum</th>
+                            <th style="text-align: right;">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.map(project => `
+                            <tr>
+                                <td><strong>${project.project_code}</strong></td>
+                                <td>${project.title}</td>
+                                <td>${project.customer_name || '-'}</td>
+                                <td>${project.contract_amount ? Utils.formatCurrency(project.contract_amount, project.currency) : '-'}</td>
+                                <td>
+                                    <span class="status-badge ${statusColors[project.status] || 'info'}">
+                                        ${statusLabels[project.status] || project.status}
+                                    </span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <button class="btn btn-ghost btn-sm" onclick="viewProject(${project.id})">Görüntüle</button>
+                                    <button class="btn btn-outline btn-sm" onclick="changeStatus(${project.id})">Durum</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function viewProject(id) {
+            const project = projects.find(p => p.id === id);
+            if (!project) return;
+
+            document.body.style.overflow = 'hidden';
+            document.getElementById('modal-container').innerHTML = `
+                <div class="modal-overlay show" onclick="closeModal(event)">
+                    <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 600px;">
+                        <div class="modal-header">
+                            <h3>${project.project_code}</h3>
+                            <button class="modal-close" onclick="closeModal()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <h4 style="margin-bottom: var(--spacing-md);">${project.title}</h4>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--spacing-md);">
+                                <div>
+                                    <div style="font-size: var(--font-size-xs); color: var(--text-muted);">Müşteri</div>
+                                    <div style="font-weight: var(--font-weight-medium);">${project.customer_name || '-'}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: var(--font-size-xs); color: var(--text-muted);">Sözleşme Tutarı</div>
+                                    <div style="font-weight: var(--font-weight-medium);">${project.contract_amount ? Utils.formatCurrency(project.contract_amount, project.currency) : '-'}</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: var(--font-size-xs); color: var(--text-muted);">Durum</div>
+                                    <span class="status-badge ${statusColors[project.status]}">
+                                        ${statusLabels[project.status]}
+                                    </span>
+                                </div>
+                                <div>
+                                    <div style="font-size: var(--font-size-xs); color: var(--text-muted);">Başlangıç</div>
+                                    <div>${project.start_date ? Utils.formatDate(project.start_date) : '-'}</div>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: var(--spacing-lg);">
+                                <div style="font-size: var(--font-size-xs); color: var(--text-muted); margin-bottom: var(--spacing-sm);">Proje İlerlemesi</div>
+                                <div style="display: flex; gap: 2px;">
+                                    ${statusOrder.slice(1).map((status, idx) => `
+                                        <div style="flex: 1; height: 8px; border-radius: 4px; background: ${statusOrder.indexOf(project.status) >= idx + 1 ? 'var(--success)' : 'var(--gray-200)'}"></div>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            ${project.description ? `
+                                <div style="margin-top: var(--spacing-lg);">
+                                    <div style="font-size: var(--font-size-xs); color: var(--text-muted);">Açıklama</div>
+                                    <div>${project.description}</div>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-ghost" onclick="closeModal()">Kapat</button>
+                            <button class="btn btn-primary" onclick="closeModal(); changeStatus(${project.id});">Durum Değiştir</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function changeStatus(id) {
+            const project = projects.find(p => p.id === id);
+            if (!project) return;
+
+            document.body.style.overflow = 'hidden';
+            document.getElementById('modal-container').innerHTML = `
+                <div class="modal-overlay show" onclick="closeModal(event)">
+                    <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 400px;">
+                        <div class="modal-header">
+                            <h3>Durum Değiştir</h3>
+                            <button class="modal-close" onclick="closeModal()">&times;</button>
+                        </div>
+                        <form onsubmit="updateStatus(event, ${id})">
+                            <div class="modal-body">
+                                <p style="margin-bottom: var(--spacing-md);"><strong>${project.project_code}</strong></p>
+                                <div class="form-group">
+                                    <label class="form-label">Yeni Durum</label>
+                                    <select class="form-select" name="status" required>
+                                        ${statusOrder.slice(1).map(status =>
+                `<option value="${status}" ${project.status === status ? 'selected' : ''}>${statusLabels[status]}</option>`
+            ).join('')}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-ghost" onclick="closeModal()">İptal</button>
+                                <button type="submit" class="btn btn-primary">Güncelle</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+        }
+
+        function closeModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('modal-container').innerHTML = '';
+            document.body.style.overflow = '';
+        }
+
+        async function updateStatus(event, id) {
+            event.preventDefault();
+            const form = event.target;
+            const status = form.status.value;
+
+            try {
+                await API.put(`/projects/${id}/status`, { status });
+                closeModal();
+                alert('Proje durumu güncellendi');
+                loadProjects();
+            } catch (error) {
+                alert(error.message || 'Bir hata oluştu');
+            }
+        }
+
+        // Enter key search
+        document.getElementById('search-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') loadProjects();
+        });
+    </script>
+</body>
+
+</html>
