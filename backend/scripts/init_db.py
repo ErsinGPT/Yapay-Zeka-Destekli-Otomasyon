@@ -94,21 +94,6 @@ def seed_initial_data():
 
 
 if __name__ == "__main__":
-    import argparse
-    
-    parser = argparse.ArgumentParser(description="Initialize Betsan CRM database")
-    parser.add_argument("--seed", action="store_true", help="Seed initial data")
-    parser.add_argument("--test", action="store_true", help="Use test database (SQLite)")
-    
-    args = parser.parse_args()
-    
-    if args.test:
-        os.environ["ENVIRONMENT"] = "testing"
-        # Reload settings
-        from importlib import reload
-        import app.config
-        reload(app.config)
-    
     init_db()
     
     if args.seed:
