@@ -1,4 +1,4 @@
-# Betsan CRM
+# Otomasyon CRM
 
 Proje Odaklı CRM, Sanal Depo ve Finansal Entegrasyon Modülü
 
