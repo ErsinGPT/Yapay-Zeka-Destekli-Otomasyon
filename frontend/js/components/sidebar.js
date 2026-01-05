@@ -27,7 +27,7 @@ const Sidebar = {
                 <nav class="sidebar-nav">
                     <div class="nav-section">
                         <div class="nav-section-title">Ana Menü</div>
-                        <div class="nav-item active" data-page="dashboard">
+                        <div class="nav-item" data-page="dashboard">
                             <span class="nav-item-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="3" y="3" width="7" height="7"></rect>
