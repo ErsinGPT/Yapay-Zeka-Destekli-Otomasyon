@@ -31,8 +31,7 @@ python scripts/init_db.py --test --seed
 
 **Sunucuyu Başlatma:**
 ```bash
-cd frontend
-npx serve -l 5500
+python -m uvicorn app.main:app --reload
 ```
 
 ### 2. Frontend Çalıştırma (Vanilla JS)
@@ -42,7 +41,7 @@ Frontend tarafı herhangi bir derleme (build) işlemi gerektirmez. Basit bir HTT
 **Python ile hızlı başlatma:**
 ```bash
 cd frontend
-python -m http.server 5500
+npx serve -l 5500
 ```
 Daha sonra tarayıcınızdan `http://localhost:5500` adresine giderek uygulamaya erişebilirsiniz.
 
