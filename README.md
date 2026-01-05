@@ -31,7 +31,8 @@ python scripts/init_db.py --test --seed
 
 **Sunucuyu Başlatma:**
 ```bash
-python -m uvicorn app.main:app --reload
+cd frontend
+npx serve -l 5500
 ```
 
 ### 2. Frontend Çalıştırma (Vanilla JS)
