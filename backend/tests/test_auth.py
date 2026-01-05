@@ -1,6 +1,6 @@
 """
 Unit tests for authentication endpoints
-Uses the actual test database (test_betsan.db)
+Uses the actual test database (test_otomasyon.db)
 """
 import pytest
 import os
@@ -18,7 +18,7 @@ class TestLogin:
         """Test login with admin user from init_db.py"""
         response = client.post(
             "/api/auth/login",
-            data={"username": "admin@betsan.com", "password": "admin123"}
+            data={"username": "admin@otomasyon.com", "password": "admin123"}
         )
         assert response.status_code == 200
         assert "access_token" in response.json()
@@ -26,7 +26,7 @@ class TestLogin:
     def test_login_wrong_password(self):
         response = client.post(
             "/api/auth/login",
-            data={"username": "admin@betsan.com", "password": "wrong"}
+            data={"username": "admin@otomasyon.com", "password": "wrong"}
         )
         assert response.status_code == 401
     
@@ -44,7 +44,7 @@ class TestMe:
         # Login
         login = client.post(
             "/api/auth/login",
-            data={"username": "admin@betsan.com", "password": "admin123"}
+            data={"username": "admin@otomasyon.com", "password": "admin123"}
         )
         assert login.status_code == 200
         token = login.json()["access_token"]
@@ -56,7 +56,7 @@ class TestMe:
         )
         assert response.status_code == 200
         data = response.json()
-        assert data["email"] == "admin@betsan.com"
+        assert data["email"] == "admin@otomasyon.com"
         assert data["role"] == "admin"
     
     def test_get_current_user_unauthorized(self):
@@ -75,7 +75,7 @@ class TestLogout:
     def test_logout(self):
         login = client.post(
             "/api/auth/login",
-            data={"username": "admin@betsan.com", "password": "admin123"}
+            data={"username": "admin@otomasyon.com", "password": "admin123"}
         )
         token = login.json()["access_token"]
         

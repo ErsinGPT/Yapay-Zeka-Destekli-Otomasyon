@@ -31,7 +31,7 @@ def get_auth_header():
     """Get authentication header by logging in"""
     response = client.post(
         "/api/auth/login",
-        data={"username": "admin@betsan.com", "password": "admin123"}
+        data={"username": "admin@otomasyon.com", "password": "admin123"}
     )
     assert response.status_code == 200
     token = response.json()["access_token"]

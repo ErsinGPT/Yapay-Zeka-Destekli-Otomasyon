@@ -1,6 +1,6 @@
 """
 Unit tests for users endpoints
-Uses the actual test database (test_betsan.db)
+Uses the actual test database (test_otomasyon.db)
 """
 import pytest
 import os
@@ -17,7 +17,7 @@ def get_admin_token():
     """Helper to get admin token"""
     response = client.post(
         "/api/auth/login",
-        data={"username": "admin@betsan.com", "password": "admin123"}
+        data={"username": "admin@otomasyon.com", "password": "admin123"}
     )
     return response.json()["access_token"]
 
@@ -32,7 +32,7 @@ class TestGetUsers:
         assert response.status_code == 200
         users = response.json()
         assert len(users) >= 1
-        assert any(u["email"] == "admin@betsan.com" for u in users)
+        assert any(u["email"] == "admin@otomasyon.com" for u in users)
     
     def test_get_users_unauthorized(self):
         response = client.get("/api/users/")
@@ -47,7 +47,7 @@ class TestGetMe:
             headers={"Authorization": f"Bearer {token}"}
         )
         assert response.status_code == 200
-        assert response.json()["email"] == "admin@betsan.com"
+        assert response.json()["email"] == "admin@otomasyon.com"
 
 
 class TestGetRoles:

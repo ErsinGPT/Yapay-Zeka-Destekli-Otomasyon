@@ -16,10 +16,10 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"  # development, testing, production
     
     # Database - PostgreSQL (Main)
-    DATABASE_URL: str = "postgresql://postgres:password@localhost:5432/betsan_crm"
+    DATABASE_URL: str = "postgresql://postgres:password@localhost:5432/otomasyon_crm"
     
     # Database - SQLite (Testing)
-    TEST_DATABASE_URL: str = "sqlite:///./test_betsan.db"
+    TEST_DATABASE_URL: str = "sqlite:///./test_otomasyon.db"
     
     # JWT
     SECRET_KEY: str = "your-super-secret-key-change-in-production"

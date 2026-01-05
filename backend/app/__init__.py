@@ -1,3 +1,3 @@
 """
-Betsan CRM Application Package
+Otomasyon CRM Application Package
 """

@@ -1,5 +1,5 @@
 """
-Betsan CRM - FastAPI Application
+Otomasyon CRM - FastAPI Application
 """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,7 +16,7 @@ from app.routers import auth, users, customers, opportunities, projects, product
 async def lifespan(app: FastAPI):
     """Application lifespan events"""
     # Startup
-    print("🚀 Betsan CRM başlatılıyor...")
+    print("🚀 Otomasyon CRM başlatılıyor...")
     
     # Create upload directory if not exists
     os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
@@ -26,11 +26,11 @@ async def lifespan(app: FastAPI):
     yield
     
     # Shutdown
-    print("👋 Betsan CRM kapatılıyor...")
+    print("👋 Otomasyon CRM kapatılıyor...")
 
 
 app = FastAPI(
-    title="Betsan CRM API",
+    title="Otomasyon CRM API",
     description="Proje Odaklı CRM, Sanal Depo ve Finansal Entegrasyon Modülü",
     version="1.0.0",
     lifespan=lifespan
@@ -71,7 +71,7 @@ async def root():
     """Health check endpoint"""
     return {
         "status": "healthy",
-        "app": "Betsan CRM",
+        "app": "Otomasyon CRM",
         "version": "1.0.0"
     }
 
