@@ -31,7 +31,8 @@ class Settings(BaseSettings):
     
     # Application
     DEBUG: bool = True
-    ALLOWED_ORIGINS: Union[str, List[str]] = "http://localhost:3000,http://127.0.0.1:3000,http://localhost:5500"
+    # Development modunda tüm origins'e izin ver, production'da sınırla
+    ALLOWED_ORIGINS: Union[str, List[str]] = "*"
     
     # File Upload
     UPLOAD_DIR: str = "uploads"

@@ -4,30 +4,39 @@
  */
 
 const Config = {
+    // Backend portu (development için)
+    backendPort: 8000,
+
+    // Production backend URL (deployment için bu değeri güncelleyin)
+    productionApiUrl: null, // Örn: 'https://api.yoursite.com/api'
+
     /**
      * API Base URL
-     * Development ortamında localhost, production'da origin kullanır
+     * Development ortamında aynı host'ta farklı port kullanır
+     * Production'da ya aynı origin ya da tanımlı URL kullanır
      */
     get apiUrl() {
-        // Production ortamı tespiti
-        const isProduction = window.location.hostname !== 'localhost' &&
-            window.location.hostname !== '127.0.0.1';
+        const hostname = window.location.hostname;
 
-        if (isProduction) {
-            return `${window.location.origin}/api`;
+        // Eğer production URL tanımlıysa onu kullan
+        if (this.productionApiUrl) {
+            return this.productionApiUrl;
         }
 
-        // Development ortamı
-        return 'http://localhost:8000/api';
+        // Development: aynı host'ta backend portuna bağlan
+        // Bu hem localhost hem de lokal ağ IP'leri için çalışır
+        return `http://${hostname}:${this.backendPort}/api`;
     },
 
     /**
      * Ortam bilgisi
      */
     get environment() {
-        const isProduction = window.location.hostname !== 'localhost' &&
-            window.location.hostname !== '127.0.0.1';
-        return isProduction ? 'production' : 'development';
+        // Production URL tanımlıysa production'dayız
+        if (this.productionApiUrl) {
+            return 'production';
+        }
+        return 'development';
     },
 
     /**
@@ -39,3 +48,4 @@ const Config = {
 };
 
 export { Config };
+
