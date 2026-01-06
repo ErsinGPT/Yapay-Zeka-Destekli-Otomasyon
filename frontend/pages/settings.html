@@ -23,14 +23,148 @@
 </head>
 
 <body data-page="settings">
-    <div class="app-layout"><!-- Main Wrapper -->
-        <div class="main-wrapper"><!-- Main Content -->
+    <div class="app-layout">
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <!-- Main Content -->
             <main class="main-content">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Ayarlar</h1>
+                        <p class="page-subtitle">Uygulama ve şirket ayarlarını yönetin</p>
+                    </div>
+                </div>
 
-                <!-- ============================================= -->
-                <!-- BURAYA SAYFA İÇERİĞİ GELİR -->
-                <!-- ============================================= -->
+                <!-- Settings Tabs -->
+                <div class="tabs-container" style="margin-bottom: var(--spacing-lg);">
+                    <button class="tab-btn active" onclick="switchTab('company')">Şirket Bilgileri</button>
+                    <button class="tab-btn" onclick="switchTab('invoice')">Fatura Ayarları</button>
+                    <button class="tab-btn" onclick="switchTab('general')">Genel Ayarlar</button>
+                </div>
 
+                <!-- Company Settings -->
+                <div class="content-card tab-content" id="company-tab">
+                    <div class="content-card-header">
+                        <h3>Şirket Bilgileri</h3>
+                    </div>
+                    <div class="content-card-body">
+                        <form id="company-form">
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">Şirket Adı (TR)</label>
+                                    <input type="text" class="form-input" name="company_name">
+                                </div>
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">Şirket Adı (EN)</label>
+                                    <input type="text" class="form-input" name="company_name_en">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">Vergi Dairesi</label>
+                                    <input type="text" class="form-input" name="tax_office">
+                                </div>
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">Vergi No</label>
+                                    <input type="text" class="form-input" name="tax_id">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Adres</label>
+                                <textarea class="form-input" name="address" rows="2"></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">Telefon</label>
+                                    <input type="text" class="form-input" name="phone">
+                                </div>
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">E-posta</label>
+                                    <input type="email" class="form-input" name="email">
+                                </div>
+                            </div>
+                            <div class="form-group" style="text-align: right;">
+                                <button type="submit" class="btn btn-primary">Kaydet</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Invoice Settings -->
+                <div class="content-card tab-content" id="invoice-tab" style="display: none;">
+                    <div class="content-card-header">
+                        <h3>Fatura Numaralama</h3>
+                    </div>
+                    <div class="content-card-body">
+                        <form id="invoice-form">
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">Ön Ek</label>
+                                    <input type="text" class="form-input" name="prefix" placeholder="FTR">
+                                </div>
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">Ayraç</label>
+                                    <input type="text" class="form-input" name="separator" placeholder="-">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">Yıl Formatı</label>
+                                    <select class="form-select" name="year_format">
+                                        <option value="%Y">2024 (4 hane)</option>
+                                        <option value="%y">24 (2 hane)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">Numara Uzunluğu</label>
+                                    <input type="number" class="form-input" name="padding" min="3" max="10" value="6">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Sonraki Numara</label>
+                                <input type="number" class="form-input" name="next_number" min="1">
+                            </div>
+                            <div class="form-group"
+                                style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--radius-md);">
+                                <strong>Önizleme:</strong>
+                                <span id="invoice-preview">FTR-2024-000001</span>
+                            </div>
+                            <div class="form-group" style="text-align: right;">
+                                <button type="submit" class="btn btn-primary">Kaydet</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- General Settings -->
+                <div class="content-card tab-content" id="general-tab" style="display: none;">
+                    <div class="content-card-header">
+                        <h3>Genel Ayarlar</h3>
+                    </div>
+                    <div class="content-card-body">
+                        <form id="general-form">
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">Varsayılan Para Birimi</label>
+                                    <select class="form-select" name="default_currency">
+                                        <option value="TRY">TRY (Türk Lirası)</option>
+                                        <option value="USD">USD (Amerikan Doları)</option>
+                                        <option value="EUR">EUR (Euro)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="flex: 1;">
+                                    <label class="form-label">Varsayılan KDV Oranı (%)</label>
+                                    <input type="number" class="form-input" name="default_vat_rate" step="0.01"
+                                        value="20">
+                                </div>
+                            </div>
+                            <div class="form-group" style="text-align: right;">
+                                <button type="submit" class="btn btn-primary">Kaydet</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </main>
         </div>
     </div>

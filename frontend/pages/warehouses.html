@@ -23,14 +23,55 @@
 </head>
 
 <body data-page="warehouses">
-    <div class="app-layout"><!-- Main Wrapper -->
-        <div class="main-wrapper"><!-- Main Content -->
+    <div class="app-layout">
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <!-- Main Content -->
             <main class="main-content">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Depolar</h1>
+                        <p class="page-subtitle">Fiziksel ve sanal depoları yönetin</p>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-primary" onclick="openCreateModal()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Yeni Depo
+                        </button>
+                    </div>
+                </div>
 
-                <!-- ============================================= -->
-                <!-- BURAYA SAYFA İÇERİĞİ GELİR -->
-                <!-- ============================================= -->
+                <!-- Filters Card -->
+                <div class="content-card" style="margin-bottom: var(--spacing-lg);">
+                    <div class="content-card-body" style="padding: var(--spacing-md);">
+                        <div class="form-inline">
+                            <div class="form-group" style="flex: 1; max-width: 300px;">
+                                <input type="text" class="form-input" id="search-input" placeholder="Depo ara...">
+                            </div>
+                            <div class="form-group">
+                                <select class="form-select" id="type-filter">
+                                    <option value="">Tüm Tipler</option>
+                                    <option value="PHYSICAL">Fiziksel</option>
+                                    <option value="VIRTUAL">Sanal (Araç)</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-outline" onclick="loadWarehouses()">Filtrele</button>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- Warehouse Cards Grid -->
+                <div class="cards-grid" id="warehouses-container">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⏳</div>
+                        <div class="empty-state-title">Yükleniyor...</div>
+                    </div>
+                </div>
             </main>
         </div>
     </div>

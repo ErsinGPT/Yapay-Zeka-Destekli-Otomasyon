@@ -28,11 +28,64 @@
         <div class="main-wrapper">
             <!-- Main Content -->
             <main class="main-content">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Ürünler</h1>
+                        <p class="page-subtitle">Ürün ve malzeme envanterini yönetin</p>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-outline" onclick="openCategoryModal()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            Kategoriler
+                        </button>
+                        <button class="btn btn-primary" onclick="openCreateModal()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Yeni Ürün
+                        </button>
+                    </div>
+                </div>
 
-                <!-- ============================================= -->
-                <!-- BURAYA SAYFA İÇERİĞİ GELİR -->
-                <!-- ============================================= -->
+                <!-- Filters Card -->
+                <div class="content-card" style="margin-bottom: var(--spacing-lg);">
+                    <div class="content-card-body" style="padding: var(--spacing-md);">
+                        <div class="form-inline">
+                            <div class="form-group" style="flex: 1; max-width: 300px;">
+                                <input type="text" class="form-input" id="search-input" placeholder="SKU veya ürün adı ara...">
+                            </div>
+                            <div class="form-group">
+                                <select class="form-select" id="category-filter">
+                                    <option value="">Tüm Kategoriler</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <select class="form-select" id="status-filter">
+                                    <option value="">Tüm Durumlar</option>
+                                    <option value="true">Aktif</option>
+                                    <option value="false">Pasif</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-outline" onclick="loadProducts()">Filtrele</button>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- Data Table Card -->
+                <div class="content-card">
+                    <div class="content-card-body" style="padding: 0;">
+                        <div class="data-table-wrapper" id="table-container">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">⏳</div>
+                                <div class="empty-state-title">Yükleniyor...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </main>
         </div>
     </div>

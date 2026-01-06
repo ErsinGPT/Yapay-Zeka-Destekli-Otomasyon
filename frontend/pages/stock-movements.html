@@ -23,14 +23,83 @@
 </head>
 
 <body data-page="stock-movements">
-    <div class="app-layout"><!-- Main Wrapper -->
-        <div class="main-wrapper"><!-- Main Content -->
+    <div class="app-layout">
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <!-- Main Content -->
             <main class="main-content">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Stok Hareketleri</h1>
+                        <p class="page-subtitle">Stok giriş, çıkış ve transferlerini yönetin</p>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-outline" onclick="openTransferModal()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="17 1 21 5 17 9"></polyline>
+                                <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+                                <polyline points="7 23 3 19 7 15"></polyline>
+                                <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+                            </svg>
+                            Transfer
+                        </button>
+                        <button class="btn btn-primary" onclick="openMovementModal()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Hareket Ekle
+                        </button>
+                    </div>
+                </div>
 
-                <!-- ============================================= -->
-                <!-- BURAYA SAYFA İÇERİĞİ GELİR -->
-                <!-- ============================================= -->
+                <!-- Summary Cards -->
+                <div class="stats-grid" id="summary-cards" style="margin-bottom: var(--spacing-lg);">
+                    <!-- Will be populated by JS -->
+                </div>
 
+                <!-- Filters Card -->
+                <div class="content-card" style="margin-bottom: var(--spacing-lg);">
+                    <div class="content-card-body" style="padding: var(--spacing-md);">
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <select class="form-select" id="movement-type-filter">
+                                    <option value="">Tüm Hareketler</option>
+                                    <option value="IN">Giriş</option>
+                                    <option value="OUT">Çıkış</option>
+                                    <option value="TRANSFER">Transfer</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <select class="form-select" id="warehouse-filter">
+                                    <option value="">Tüm Depolar</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="date" class="form-input" id="date-from">
+                            </div>
+                            <div class="form-group">
+                                <input type="date" class="form-input" id="date-to">
+                            </div>
+                            <button class="btn btn-outline" onclick="loadMovements()">Filtrele</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Table Card -->
+                <div class="content-card">
+                    <div class="content-card-body" style="padding: 0;">
+                        <div class="data-table-wrapper" id="table-container">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">⏳</div>
+                                <div class="empty-state-title">Yükleniyor...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </main>
         </div>
     </div>

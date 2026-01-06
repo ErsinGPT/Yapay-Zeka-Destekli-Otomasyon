@@ -23,14 +23,68 @@
 </head>
 
 <body data-page="expenses">
-    <div class="app-layout"><!-- Main Wrapper -->
-        <div class="main-wrapper"><!-- Main Content -->
+    <div class="app-layout">
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <!-- Main Content -->
             <main class="main-content">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Masraflar</h1>
+                        <p class="page-subtitle">Personel masraflarını yönetin ve onaylayın</p>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-primary" onclick="openCreateModal()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Yeni Masraf
+                        </button>
+                    </div>
+                </div>
 
-                <!-- ============================================= -->
-                <!-- BURAYA SAYFA İÇERİĞİ GELİR -->
-                <!-- ============================================= -->
+                <!-- Filters Card -->
+                <div class="content-card" style="margin-bottom: var(--spacing-lg);">
+                    <div class="content-card-body" style="padding: var(--spacing-md);">
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <select class="form-select" id="type-filter">
+                                    <option value="">Tüm Tipler</option>
+                                    <option value="TRAVEL">Yol</option>
+                                    <option value="ACCOMMODATION">Konaklama</option>
+                                    <option value="FOOD">Yemek</option>
+                                    <option value="TRANSPORT">Ulaşım</option>
+                                    <option value="MATERIAL">Malzeme</option>
+                                    <option value="OTHER">Diğer</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <select class="form-select" id="status-filter">
+                                    <option value="">Tüm Durumlar</option>
+                                    <option value="PENDING">Bekliyor</option>
+                                    <option value="APPROVED">Onaylandı</option>
+                                    <option value="REJECTED">Reddedildi</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-outline" onclick="loadExpenses()">Filtrele</button>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- Data Table Card -->
+                <div class="content-card">
+                    <div class="content-card-body" style="padding: 0;">
+                        <div class="data-table-wrapper" id="table-container">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">⏳</div>
+                                <div class="empty-state-title">Yükleniyor...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </main>
         </div>
     </div>
