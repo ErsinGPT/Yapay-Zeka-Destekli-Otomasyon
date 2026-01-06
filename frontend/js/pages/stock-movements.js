@@ -376,11 +376,11 @@ async function createMovement(event) {
     try {
         await API.post('/stock/movements', data);
         closeModal();
-        alert('Hareket kaydedildi');
+        Utils.toast.success('Hareket kaydedildi');
         loadMovements();
         loadSummary();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 
@@ -404,18 +404,18 @@ async function createTransfer(event) {
     });
 
     if (data.from_warehouse_id === data.to_warehouse_id) {
-        alert('Çıkış ve giriş deposu aynı olamaz');
+        Utils.toast.warning('Çıkış ve giriş deposu aynı olamaz');
         return;
     }
 
     try {
         await API.stock.transfer(data);
         closeModal();
-        alert('Transfer başarılı');
+        Utils.toast.success('Transfer başarılı');
         loadMovements();
         loadSummary();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 

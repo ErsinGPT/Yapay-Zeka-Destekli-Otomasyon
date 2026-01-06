@@ -158,6 +158,10 @@ function renderTable(data) {
             actionTd.appendChild(bomBtn);
         }
 
+        const deleteBtn = Utils.createElement('button', { class: 'btn btn-ghost btn-sm', style: 'color: var(--danger);' }, 'Sil');
+        deleteBtn.addEventListener('click', () => deleteProduct(product.id, product.name));
+        actionTd.appendChild(deleteBtn);
+
         tr.appendChild(actionTd);
         tbody.appendChild(tr);
     });
@@ -375,10 +379,10 @@ async function createProduct(event) {
 
         bomItems = []; // Reset BOM items
         closeModal();
-        alert('Ürün başarıyla oluşturuldu');
+        Utils.toast.success('Ürün başarıyla oluşturuldu');
         loadProducts();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 
@@ -494,10 +498,10 @@ async function updateProduct(event, id) {
     try {
         await API.products.update(id, data);
         closeModal();
-        alert('Ürün güncellendi');
+        Utils.toast.success('Ürün güncellendi');
         loadProducts();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 
@@ -567,7 +571,7 @@ async function showBom(productId) {
         overlay.appendChild(modal);
         modalContainer.appendChild(overlay);
     } catch (error) {
-        alert('BOM yüklenemedi: ' + error.message);
+        Utils.toast.error('BOM yüklenemedi: ' + error.message);
     }
 }
 
@@ -665,23 +669,135 @@ async function createCategory(event) {
         await loadCategories();
         openCategoryModal();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 
 /**
- * Kategori sil
+ * Kategori sil - Modal göster
  */
-async function deleteCategory(id, name) {
-    if (!confirm(`"${name}" kategorisini silmek istediğinize emin misiniz?`)) return;
+function deleteCategory(id, name) {
+    // Kategori modalını kapat
+    closeModal();
 
-    try {
-        await API.delete(`/products/categories/${id}`);
-        await loadCategories();
-        openCategoryModal();
-    } catch (error) {
-        alert(error.message || 'Bir hata oluştu. Bu kategoride ürün bulunuyor olabilir.');
-    }
+    setTimeout(() => {
+        document.body.style.overflow = 'hidden';
+        const modalContainer = document.getElementById('modal-container');
+        modalContainer.innerHTML = '';
+
+        const overlay = Utils.createElement('div', { class: 'modal-overlay show' });
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) { closeModal(); openCategoryModal(); }
+        });
+
+        const modal = Utils.createElement('div', { class: 'modal-content', style: 'max-width: 400px;' });
+        modal.addEventListener('click', (e) => e.stopPropagation());
+
+        const header = Utils.createElement('div', { class: 'modal-header' });
+        header.appendChild(Utils.createElement('h3', { style: 'color: var(--danger);' }, '⚠️ Kategori Sil'));
+        const closeBtn = Utils.createElement('button', { class: 'modal-close' }, '×');
+        closeBtn.addEventListener('click', () => { closeModal(); openCategoryModal(); });
+        header.appendChild(closeBtn);
+        modal.appendChild(header);
+
+        const body = Utils.createElement('div', { class: 'modal-body' });
+        body.appendChild(Utils.createElement('p', {}, `"${name}" kategorisini silmek istediğinize emin misiniz?`));
+        body.appendChild(Utils.createElement('p', { style: 'font-size: var(--font-size-sm); color: var(--text-muted); margin-top: var(--spacing-sm);' }, 'Bu kategoride ürün varsa silme işlemi başarısız olacaktır.'));
+        modal.appendChild(body);
+
+        const footer = Utils.createElement('div', { class: 'modal-footer' });
+        const cancelBtn = Utils.createElement('button', { type: 'button', class: 'btn btn-ghost' }, 'İptal');
+        cancelBtn.addEventListener('click', () => { closeModal(); openCategoryModal(); });
+        footer.appendChild(cancelBtn);
+
+        const confirmBtn = Utils.createElement('button', { type: 'button', class: 'btn btn-danger' }, 'Sil');
+        confirmBtn.addEventListener('click', async () => {
+            try {
+                confirmBtn.disabled = true;
+                confirmBtn.textContent = 'Siliniyor...';
+                await API.delete(`/products/categories/${id}`);
+                closeModal();
+                await loadCategories();
+                Utils.toast.success('Kategori silindi');
+                openCategoryModal();
+            } catch (error) {
+                Utils.toast.error(error.message || 'Bu kategoride ürün bulunuyor olabilir.');
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = 'Sil';
+            }
+        });
+        footer.appendChild(confirmBtn);
+        modal.appendChild(footer);
+
+        overlay.appendChild(modal);
+        modalContainer.appendChild(overlay);
+    }, 100);
+}
+
+/**
+ * Ürün sil - Modal göster
+ */
+function deleteProduct(id, name) {
+    document.body.style.overflow = 'hidden';
+    const modalContainer = document.getElementById('modal-container');
+    modalContainer.innerHTML = '';
+
+    const overlay = Utils.createElement('div', { class: 'modal-overlay show' });
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal();
+    });
+
+    const modal = Utils.createElement('div', { class: 'modal-content', style: 'max-width: 400px;' });
+    modal.addEventListener('click', (e) => e.stopPropagation());
+
+    const header = Utils.createElement('div', { class: 'modal-header' });
+    header.appendChild(Utils.createElement('h3', { style: 'color: var(--danger);' }, '⚠️ Ürün Sil'));
+    const closeBtn = Utils.createElement('button', { class: 'modal-close' }, '×');
+    closeBtn.addEventListener('click', closeModal);
+    header.appendChild(closeBtn);
+    modal.appendChild(header);
+
+    const body = Utils.createElement('div', { class: 'modal-body' });
+    body.appendChild(Utils.createElement('p', {}, `"${name}" ürününü silmek istediğinize emin misiniz?`));
+    body.appendChild(Utils.createElement('p', { style: 'font-size: var(--font-size-sm); color: var(--text-muted); margin-top: var(--spacing-sm);' }, 'Stoku olan ürünler normalde silinemez.'));
+
+    // Force delete checkbox
+    const forceGroup = Utils.createElement('div', { style: 'margin-top: var(--spacing-md); padding: var(--spacing-sm); background: var(--warning-bg); border-radius: var(--radius-md);' });
+    const forceLabel = Utils.createElement('label', { style: 'display: flex; align-items: center; gap: var(--spacing-xs); cursor: pointer;' });
+    const forceCheckbox = Utils.createElement('input', { type: 'checkbox', id: 'force-delete-checkbox' });
+    forceLabel.appendChild(forceCheckbox);
+    forceLabel.appendChild(Utils.createElement('span', { style: 'font-size: var(--font-size-sm);' }, 'Stok kaydını da sil (zorla sil)'));
+    forceGroup.appendChild(forceLabel);
+    body.appendChild(forceGroup);
+
+    modal.appendChild(body);
+
+    const footer = Utils.createElement('div', { class: 'modal-footer' });
+    const cancelBtn = Utils.createElement('button', { type: 'button', class: 'btn btn-ghost' }, 'İptal');
+    cancelBtn.addEventListener('click', closeModal);
+    footer.appendChild(cancelBtn);
+
+    const confirmBtn = Utils.createElement('button', { type: 'button', class: 'btn btn-danger' }, 'Sil');
+    confirmBtn.addEventListener('click', async () => {
+        try {
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Siliniyor...';
+            const forceDelete = document.getElementById('force-delete-checkbox').checked;
+            await API.delete(`/products/${id}${forceDelete ? '?force=true' : ''}`);
+            closeModal();
+            Utils.toast.success('Ürün silindi');
+            loadProducts();
+        } catch (error) {
+            Utils.toast.error(error.message || 'Stoku olan ürün silinemez.');
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = 'Sil';
+        }
+    });
+    footer.appendChild(confirmBtn);
+    modal.appendChild(footer);
+
+    overlay.appendChild(modal);
+    modalContainer.appendChild(overlay);
 }
 
 // BOM ekleme
@@ -695,7 +811,7 @@ function addBomItem() {
     const qty = parseInt(qtyInput.value) || 1;
 
     if (!productId) {
-        alert('Lütfen bir malzeme seçin');
+        Utils.toast.warning('Lütfen bir malzeme seçin');
         return;
     }
 

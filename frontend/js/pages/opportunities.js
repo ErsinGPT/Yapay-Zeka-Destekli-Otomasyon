@@ -321,35 +321,115 @@ async function createOpportunity(event) {
     try {
         await API.post('/opportunities', data);
         closeModal();
-        alert('Fırsat oluşturuldu');
+        Utils.toast.success('Fırsat oluşturuldu');
         loadOpportunities();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 
-async function markWon(id) {
-    if (!confirm('Bu fırsatı "Kazanıldı" olarak işaretlemek istiyor musunuz? Otomatik proje oluşturulacak.')) return;
+function markWon(id) {
+    document.body.style.overflow = 'hidden';
+    const modalContainer = document.getElementById('modal-container');
+    modalContainer.innerHTML = '';
 
-    try {
-        const project = await API.post(`/opportunities/${id}/won`);
-        alert(`Tebrikler! Proje oluşturuldu: ${project.project_code}`);
-        loadOpportunities();
-    } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
-    }
+    const overlay = Utils.createElement('div', { class: 'modal-overlay show' });
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal();
+    });
+
+    const modal = Utils.createElement('div', { class: 'modal-content', style: 'max-width: 400px;' });
+    modal.addEventListener('click', (e) => e.stopPropagation());
+
+    const header = Utils.createElement('div', { class: 'modal-header' });
+    header.appendChild(Utils.createElement('h3', { style: 'color: var(--success);' }, '🎉 Fırsat Kazanıldı'));
+    const closeBtn = Utils.createElement('button', { class: 'modal-close' }, '×');
+    closeBtn.addEventListener('click', closeModal);
+    header.appendChild(closeBtn);
+    modal.appendChild(header);
+
+    const body = Utils.createElement('div', { class: 'modal-body' });
+    body.appendChild(Utils.createElement('p', {}, 'Bu fırsatı "Kazanıldı" olarak işaretlemek istiyor musunuz?'));
+    body.appendChild(Utils.createElement('p', { style: 'font-size: var(--font-size-sm); color: var(--text-muted); margin-top: var(--spacing-sm);' }, '✅ Otomatik olarak yeni bir proje oluşturulacaktır.'));
+    modal.appendChild(body);
+
+    const footer = Utils.createElement('div', { class: 'modal-footer' });
+    const cancelBtn = Utils.createElement('button', { type: 'button', class: 'btn btn-ghost' }, 'İptal');
+    cancelBtn.addEventListener('click', closeModal);
+    footer.appendChild(cancelBtn);
+
+    const confirmBtn = Utils.createElement('button', { type: 'button', class: 'btn btn-success' }, 'Kazanıldı');
+    confirmBtn.addEventListener('click', async () => {
+        try {
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'İşleniyor...';
+            const project = await API.post(`/opportunities/${id}/won`);
+            closeModal();
+            Utils.toast.success(`Tebrikler! Proje oluşturuldu: ${project.project_code}`);
+            loadOpportunities();
+        } catch (error) {
+            Utils.toast.error(error.message || 'Bir hata oluştu');
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = 'Kazanıldı';
+        }
+    });
+    footer.appendChild(confirmBtn);
+    modal.appendChild(footer);
+
+    overlay.appendChild(modal);
+    modalContainer.appendChild(overlay);
 }
 
-async function markLost(id) {
-    if (!confirm('Bu fırsatı "Kaybedildi" olarak işaretlemek istiyor musunuz?')) return;
+function markLost(id) {
+    document.body.style.overflow = 'hidden';
+    const modalContainer = document.getElementById('modal-container');
+    modalContainer.innerHTML = '';
 
-    try {
-        await API.post(`/opportunities/${id}/lost`);
-        alert('Fırsat kaybedildi olarak işaretlendi');
-        loadOpportunities();
-    } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
-    }
+    const overlay = Utils.createElement('div', { class: 'modal-overlay show' });
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal();
+    });
+
+    const modal = Utils.createElement('div', { class: 'modal-content', style: 'max-width: 400px;' });
+    modal.addEventListener('click', (e) => e.stopPropagation());
+
+    const header = Utils.createElement('div', { class: 'modal-header' });
+    header.appendChild(Utils.createElement('h3', { style: 'color: var(--warning);' }, '😔 Fırsat Kaybedildi'));
+    const closeBtn = Utils.createElement('button', { class: 'modal-close' }, '×');
+    closeBtn.addEventListener('click', closeModal);
+    header.appendChild(closeBtn);
+    modal.appendChild(header);
+
+    const body = Utils.createElement('div', { class: 'modal-body' });
+    body.appendChild(Utils.createElement('p', {}, 'Bu fırsatı "Kaybedildi" olarak işaretlemek istiyor musunuz?'));
+    body.appendChild(Utils.createElement('p', { style: 'font-size: var(--font-size-sm); color: var(--text-muted); margin-top: var(--spacing-sm);' }, 'Bu işlem geri alınamaz.'));
+    modal.appendChild(body);
+
+    const footer = Utils.createElement('div', { class: 'modal-footer' });
+    const cancelBtn = Utils.createElement('button', { type: 'button', class: 'btn btn-ghost' }, 'İptal');
+    cancelBtn.addEventListener('click', closeModal);
+    footer.appendChild(cancelBtn);
+
+    const confirmBtn = Utils.createElement('button', { type: 'button', class: 'btn btn-warning' }, 'Kaybedildi');
+    confirmBtn.addEventListener('click', async () => {
+        try {
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'İşleniyor...';
+            await API.post(`/opportunities/${id}/lost`);
+            closeModal();
+            Utils.toast.info('Fırsat kaybedildi olarak işaretlendi');
+            loadOpportunities();
+        } catch (error) {
+            Utils.toast.error(error.message || 'Bir hata oluştu');
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = 'Kaybedildi';
+        }
+    });
+    footer.appendChild(confirmBtn);
+    modal.appendChild(footer);
+
+    overlay.appendChild(modal);
+    modalContainer.appendChild(overlay);
 }
 
 function editOpportunity(id) {
@@ -475,39 +555,92 @@ async function updateOpportunity(event, id) {
     try {
         await API.put(`/opportunities/${id}`, data);
         closeModal();
-        alert('Fırsat güncellendi');
+        Utils.toast.success('Fırsat güncellendi');
         loadOpportunities();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 
 /**
- * Fırsat sil
+ * Fırsat sil - Modal göster
  */
-async function deleteOpportunity(id, title, status, projectId) {
-    // Kazanılan veya kaybedilen fırsatlar için ekstra onay
+function deleteOpportunity(id, title, status, projectId) {
+    document.body.style.overflow = 'hidden';
+    const modalContainer = document.getElementById('modal-container');
+    modalContainer.innerHTML = '';
+
+    const overlay = Utils.createElement('div', { class: 'modal-overlay show' });
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal();
+    });
+
+    const modal = Utils.createElement('div', {
+        class: 'modal-content',
+        style: 'max-width: 450px;'
+    });
+    modal.addEventListener('click', (e) => e.stopPropagation());
+
+    // Header
+    const header = Utils.createElement('div', { class: 'modal-header' });
+    header.appendChild(Utils.createElement('h3', { style: 'color: var(--danger);' }, '⚠️ Fırsat Sil'));
+    const closeBtn = Utils.createElement('button', { class: 'modal-close' }, '×');
+    closeBtn.addEventListener('click', closeModal);
+    header.appendChild(closeBtn);
+    modal.appendChild(header);
+
+    // Body
+    const body = Utils.createElement('div', { class: 'modal-body' });
+
+    // Kazanılan/Kaybedilen fırsatlar için ekstra uyarı
     if (status === 'WON' || status === 'LOST') {
-        const statusLabel = status === 'WON' ? 'KAZANILMIŞ' : 'KAYBEDILMIŞ';
-        const extraWarning = status === 'WON' && projectId
-            ? '\n\n⚠️ UYARI: Bu fırsat bir projeye dönüştürülmüştür! Silindiğinde ilgili proje de silinecektir!'
-            : '';
+        const statusLabel = status === 'WON' ? 'KAZANILMIŞ' : 'KAYBEDİLMİŞ';
+        const alertDiv = Utils.createElement('div', {
+            style: 'background: var(--warning-bg); border: 1px solid var(--warning); padding: var(--spacing-sm); border-radius: var(--radius-md); margin-bottom: var(--spacing-md);'
+        });
+        alertDiv.appendChild(Utils.createElement('strong', { style: 'color: var(--warning);' }, `⚠️ DİKKAT! Bu fırsat "${statusLabel}" durumundadır.`));
 
-        if (!confirm(`⚠️ DİKKAT! Bu fırsat "${statusLabel}" durumundadır.${extraWarning}\n\n"${title}" fırsatını silmek istediğinize EMiN misiniz?`)) return;
-
-        // İkinci onay
-        if (!confirm(`SON ONAY: "${title}" fırsatını ve ilişkili tüm verileri silmek istediğinizi tekrar onaylıyor musunuz?`)) return;
-    } else {
-        if (!confirm(`"${title}" fırsatını silmek istediğinize emin misiniz?`)) return;
+        if (status === 'WON' && projectId) {
+            alertDiv.appendChild(Utils.createElement('p', {
+                style: 'margin-top: var(--spacing-xs); font-size: var(--font-size-sm); color: var(--danger);'
+            }, '🔴 Bu fırsat bir projeye dönüştürülmüştür! Silindiğinde ilgili proje de silinecektir!'));
+        }
+        body.appendChild(alertDiv);
     }
 
-    try {
-        await API.delete(`/opportunities/${id}`);
-        alert('Fırsat silindi');
-        loadOpportunities();
-    } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
-    }
+    body.appendChild(Utils.createElement('p', {}, `"${title}" fırsatını silmek istediğinize emin misiniz?`));
+    body.appendChild(Utils.createElement('p', {
+        style: 'font-size: var(--font-size-sm); color: var(--text-muted); margin-top: var(--spacing-sm);'
+    }, 'Bu işlem geri alınamaz. Fırsata ait tüm teklifler de silinecektir.'));
+    modal.appendChild(body);
+
+    // Footer
+    const footer = Utils.createElement('div', { class: 'modal-footer' });
+
+    const cancelBtn = Utils.createElement('button', { type: 'button', class: 'btn btn-ghost' }, 'İptal');
+    cancelBtn.addEventListener('click', closeModal);
+    footer.appendChild(cancelBtn);
+
+    const confirmBtn = Utils.createElement('button', { type: 'button', class: 'btn btn-danger' }, 'Sil');
+    confirmBtn.addEventListener('click', async () => {
+        try {
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Siliniyor...';
+            await API.delete(`/opportunities/${id}`);
+            closeModal();
+            Utils.toast.success('Fırsat silindi');
+            loadOpportunities();
+        } catch (error) {
+            Utils.toast.error(error.message || 'Bir hata oluştu');
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = 'Sil';
+        }
+    });
+    footer.appendChild(confirmBtn);
+
+    modal.appendChild(footer);
+    overlay.appendChild(modal);
+    modalContainer.appendChild(overlay);
 }
 
 // Global fonksiyonlar

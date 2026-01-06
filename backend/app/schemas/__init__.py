@@ -277,6 +277,9 @@ class ProductResponse(ProductBase):
     created_at: datetime
     updated_at: Optional[datetime] = None
     
+    # Category name for display
+    category_name: Optional[str] = None
+    
     # Computed stock info
     total_stock: Optional[Decimal] = None
     available_stock: Optional[Decimal] = None

@@ -43,6 +43,34 @@ async def create_category(
     return db_category
 
 
+@router.delete("/categories/{category_id}")
+async def delete_category(
+    category_id: int,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+    """Delete a product category"""
+    category = db.query(ProductCategory).filter(ProductCategory.id == category_id).first()
+    if not category:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Kategori bulunamadı"
+        )
+    
+    # Check if any products are using this category
+    products_count = db.query(Product).filter(Product.category_id == category_id).count()
+    if products_count > 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Bu kategoride {products_count} ürün bulunmaktadır. Önce ürünleri başka kategoriye taşıyın."
+        )
+    
+    db.delete(category)
+    db.commit()
+    
+    return {"message": "Kategori silindi"}
+
+
 # ===== PRODUCTS CRUD =====
 
 @router.get("/", response_model=List[ProductResponse])
@@ -94,6 +122,7 @@ async def get_products(
             "name_en": product.name_en,
             "description": product.description,
             "category_id": product.category_id,
+            "category_name": product.category.name if product.category else None,
             "gtip_code": product.gtip_code,
             "unit": product.unit,
             "cost": product.cost,
@@ -223,6 +252,7 @@ async def update_product(
 @router.delete("/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_product(
     product_id: int,
+    force: bool = Query(False, description="Force delete even if product has stock"),
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
@@ -240,10 +270,13 @@ async def delete_product(
     ).scalar()
     
     if total_stock and total_stock > 0:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Stoku olan ürün silinemez"
-        )
+        if not force:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Stoku olan ürün silinemez. Zorla silmek için force=true kullanın."
+            )
+        # Force delete - clear stock records
+        db.query(WarehouseStock).filter(WarehouseStock.product_id == product_id).delete()
     
     product.is_active = False
     db.commit()

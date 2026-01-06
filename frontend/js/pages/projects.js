@@ -364,10 +364,10 @@ async function updateStatus(event, id) {
     try {
         await API.put(`/projects/${id}/status`, { status });
         closeModal();
-        alert('Proje durumu güncellendi');
+        Utils.toast.success('Proje durumu güncellendi');
         loadProjects();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 

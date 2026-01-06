@@ -242,10 +242,10 @@ async function createCustomer(event) {
     try {
         await API.post('/customers', data);
         closeModal();
-        alert('Müşteri başarıyla oluşturuldu');
+        Utils.toast.success('Müşteri başarıyla oluşturuldu');
         loadCustomers();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 
@@ -369,26 +369,75 @@ async function updateCustomer(event, id) {
     try {
         await API.put(`/customers/${id}`, data);
         closeModal();
-        alert('Müşteri güncellendi');
+        Utils.toast.success('Müşteri güncellendi');
         loadCustomers();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 
 /**
- * Müşteri sil
+ * Müşteri sil - Onay modal'ı göster
  */
-async function deleteCustomer(id, name) {
-    if (!confirm(`"${name}" müşterisini silmek istediğinize emin misiniz?`)) return;
+function deleteCustomer(id, name) {
+    document.body.style.overflow = 'hidden';
+    const modalContainer = document.getElementById('modal-container');
+    modalContainer.innerHTML = '';
 
-    try {
-        await API.delete(`/customers/${id}`);
-        alert('Müşteri silindi');
-        loadCustomers();
-    } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
-    }
+    const overlay = Utils.createElement('div', { class: 'modal-overlay show' });
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal();
+    });
+
+    const modal = Utils.createElement('div', {
+        class: 'modal-content',
+        style: 'max-width: 400px;'
+    });
+    modal.addEventListener('click', (e) => e.stopPropagation());
+
+    // Header
+    const header = Utils.createElement('div', { class: 'modal-header' });
+    header.appendChild(Utils.createElement('h3', { style: 'color: var(--danger);' }, '⚠️ Müşteri Sil'));
+    const closeBtn = Utils.createElement('button', { class: 'modal-close' }, '×');
+    closeBtn.addEventListener('click', closeModal);
+    header.appendChild(closeBtn);
+    modal.appendChild(header);
+
+    // Body
+    const body = Utils.createElement('div', { class: 'modal-body' });
+    body.appendChild(Utils.createElement('p', {}, `"${name}" müşterisini silmek istediğinize emin misiniz?`));
+    body.appendChild(Utils.createElement('p', {
+        style: 'font-size: var(--font-size-sm); color: var(--text-muted); margin-top: var(--spacing-sm);'
+    }, 'Bu işlem geri alınamaz. Müşteriye ait tüm veriler silinecektir.'));
+    modal.appendChild(body);
+
+    // Footer
+    const footer = Utils.createElement('div', { class: 'modal-footer' });
+
+    const cancelBtn = Utils.createElement('button', { type: 'button', class: 'btn btn-ghost' }, 'İptal');
+    cancelBtn.addEventListener('click', closeModal);
+    footer.appendChild(cancelBtn);
+
+    const confirmBtn = Utils.createElement('button', { type: 'button', class: 'btn btn-danger' }, 'Sil');
+    confirmBtn.addEventListener('click', async () => {
+        try {
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Siliniyor...';
+            await API.delete(`/customers/${id}`);
+            closeModal();
+            Utils.toast.success('Müşteri silindi');
+            loadCustomers();
+        } catch (error) {
+            Utils.toast.error(error.message || 'Bir hata oluştu');
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = 'Sil';
+        }
+    });
+    footer.appendChild(confirmBtn);
+
+    modal.appendChild(footer);
+    overlay.appendChild(modal);
+    modalContainer.appendChild(overlay);
 }
 
 // Global fonksiyonlar (onclick handler'lar için)

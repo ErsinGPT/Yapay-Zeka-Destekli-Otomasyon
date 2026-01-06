@@ -129,7 +129,7 @@ async def delete_customer(
     current_user = Depends(require_admin)
 ):
     """
-    Deactivate a customer (soft delete).
+    Delete a customer permanently.
     Only admins can delete customers.
     """
     customer = db.query(Customer).filter(Customer.id == customer_id).first()
@@ -139,8 +139,20 @@ async def delete_customer(
             detail="Müşteri bulunamadı"
         )
     
-    # Soft delete - just mark as inactive
-    customer.is_active = False
+    # Check if customer has related records (opportunities, projects, etc.)
+    from app.models import Opportunity, Project
+    
+    has_opportunities = db.query(Opportunity).filter(Opportunity.customer_id == customer_id).first()
+    has_projects = db.query(Project).filter(Project.customer_id == customer_id).first()
+    
+    if has_opportunities or has_projects:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Bu müşteriye ait fırsat veya proje bulunmaktadır. Önce ilişkili kayıtları silin."
+        )
+    
+    # Hard delete
+    db.delete(customer)
     db.commit()
     
-    return {"message": "Müşteri devre dışı bırakıldı"}
+    return {"message": "Müşteri silindi"}

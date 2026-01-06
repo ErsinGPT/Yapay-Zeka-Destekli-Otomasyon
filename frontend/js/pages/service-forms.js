@@ -275,10 +275,10 @@ async function createServiceForm(event) {
     try {
         await API.serviceForms.create(data);
         closeModal();
-        alert('Servis formu oluşturuldu');
+        Utils.toast.success('Servis formu oluşturuldu');
         loadServiceForms();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 
@@ -350,7 +350,7 @@ async function viewServiceForm(id) {
         overlay.appendChild(modal);
         modalContainer.appendChild(overlay);
     } catch (error) {
-        alert('Form yüklenemedi: ' + error.message);
+        Utils.toast.error('Form yüklenemedi: ' + error.message);
     }
 }
 
@@ -361,10 +361,10 @@ async function completeForm(id) {
     if (!confirm('Servis formu tamamlansın mı?')) return;
     try {
         await API.serviceForms.complete(id);
-        alert('Form tamamlandı');
+        Utils.toast.success('Form tamamlandı');
         loadServiceForms();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 

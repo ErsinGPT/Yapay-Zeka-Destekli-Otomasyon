@@ -19,7 +19,7 @@ async function loadSettings() {
         populateForms();
     } catch (error) {
         console.error('Ayarlar yüklenemedi:', error);
-        alert('Ayarlar yüklenemedi: ' + error.message);
+        Utils.toast.error('Ayarlar yüklenemedi: ' + error.message);
     }
 }
 
@@ -120,10 +120,10 @@ async function saveCompanySettings(event) {
 
     try {
         await API.put('/settings/company', data);
-        alert('Şirket bilgileri kaydedildi');
+        Utils.toast.success('Şirket bilgileri kaydedildi');
         loadSettings();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 
@@ -148,10 +148,10 @@ async function saveInvoiceSettings(event) {
 
     try {
         await API.put('/settings/invoice-numbering', data);
-        alert('Fatura ayarları kaydedildi');
+        Utils.toast.success('Fatura ayarları kaydedildi');
         loadSettings();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 
@@ -177,10 +177,10 @@ async function saveGeneralSettings(event) {
 
     try {
         await API.put('/settings', data);
-        alert('Genel ayarlar kaydedildi');
+        Utils.toast.success('Genel ayarlar kaydedildi');
         loadSettings();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 

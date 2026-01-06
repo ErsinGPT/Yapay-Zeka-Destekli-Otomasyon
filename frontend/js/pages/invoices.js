@@ -322,10 +322,10 @@ async function createInvoice(event) {
     try {
         await API.invoices.create(data);
         closeModal();
-        alert('Fatura oluşturuldu');
+        Utils.toast.success('Fatura oluşturuldu');
         loadInvoices();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 
@@ -387,7 +387,7 @@ async function viewInvoice(id) {
         overlay.appendChild(modal);
         modalContainer.appendChild(overlay);
     } catch (error) {
-        alert('Fatura yüklenemedi: ' + error.message);
+        Utils.toast.error('Fatura yüklenemedi: ' + error.message);
     }
 }
 
@@ -398,10 +398,10 @@ async function sendInvoice(id) {
     if (!confirm('Fatura gönderilsin mi?')) return;
     try {
         await API.invoices.send(id);
-        alert('Fatura gönderildi');
+        Utils.toast.success('Fatura gönderildi');
         loadInvoices();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 
@@ -412,10 +412,10 @@ async function markPaid(id) {
     if (!confirm('Fatura ödendi olarak işaretlensin mi?')) return;
     try {
         await API.post(`/invoices/${id}/mark-paid`);
-        alert('Fatura ödendi olarak işaretlendi');
+        Utils.toast.success('Fatura ödendi olarak işaretlendi');
         loadInvoices();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 

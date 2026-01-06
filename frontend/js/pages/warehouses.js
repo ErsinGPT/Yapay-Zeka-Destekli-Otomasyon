@@ -243,10 +243,10 @@ async function createWarehouse(event) {
     try {
         await API.warehouses.create(data);
         closeModal();
-        alert('Depo başarıyla oluşturuldu');
+        Utils.toast.success('Depo başarıyla oluşturuldu');
         loadWarehouses();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 
@@ -343,10 +343,10 @@ async function updateWarehouse(event, id) {
     try {
         await API.warehouses.update(id, data);
         closeModal();
-        alert('Depo güncellendi');
+        Utils.toast.success('Depo güncellendi');
         loadWarehouses();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 
@@ -432,37 +432,74 @@ async function viewWarehouseStock(warehouseId) {
         overlay.appendChild(modal);
         modalContainer.appendChild(overlay);
     } catch (error) {
-        alert('Stok yüklenemedi: ' + error.message);
+        Utils.toast.error('Stok yüklenemedi: ' + error.message);
     }
 }
 
 /**
- * Depo sil
+ * Depo sil - Modal göster
  */
-async function deleteWarehouse(id, name) {
-    // Önce stok kontrolü yap
-    try {
-        const stock = await API.warehouses.getStock(id);
-        const totalStock = stock.reduce((sum, item) => sum + (item.quantity || 0), 0);
+function deleteWarehouse(id, name) {
+    document.body.style.overflow = 'hidden';
+    const modalContainer = document.getElementById('modal-container');
+    modalContainer.innerHTML = '';
 
-        if (totalStock > 0) {
-            alert(`"${name}" deposunda ${totalStock} adet stok bulunmaktadır. Silmeden önce stokları başka bir depoya transfer etmeniz gerekmektedir.`);
-            return;
+    const overlay = Utils.createElement('div', { class: 'modal-overlay show' });
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal();
+    });
+
+    const modal = Utils.createElement('div', { class: 'modal-content', style: 'max-width: 400px;' });
+    modal.addEventListener('click', (e) => e.stopPropagation());
+
+    const header = Utils.createElement('div', { class: 'modal-header' });
+    header.appendChild(Utils.createElement('h3', { style: 'color: var(--danger);' }, '⚠️ Depo Sil'));
+    const closeBtn = Utils.createElement('button', { class: 'modal-close' }, '×');
+    closeBtn.addEventListener('click', closeModal);
+    header.appendChild(closeBtn);
+    modal.appendChild(header);
+
+    const body = Utils.createElement('div', { class: 'modal-body' });
+    body.appendChild(Utils.createElement('p', {}, `"${name}" deposunu silmek istediğinize emin misiniz?`));
+    body.appendChild(Utils.createElement('p', { style: 'font-size: var(--font-size-sm); color: var(--text-muted); margin-top: var(--spacing-sm);' }, 'Stoğu olan depolar normalde silinemez.'));
+
+    // Force delete checkbox
+    const forceGroup = Utils.createElement('div', { style: 'margin-top: var(--spacing-md); padding: var(--spacing-sm); background: var(--warning-bg); border-radius: var(--radius-md);' });
+    const forceLabel = Utils.createElement('label', { style: 'display: flex; align-items: center; gap: var(--spacing-xs); cursor: pointer;' });
+    const forceCheckbox = Utils.createElement('input', { type: 'checkbox', id: 'force-delete-warehouse' });
+    forceLabel.appendChild(forceCheckbox);
+    forceLabel.appendChild(Utils.createElement('span', { style: 'font-size: var(--font-size-sm);' }, 'Stok kaydını da sil (zorla sil)'));
+    forceGroup.appendChild(forceLabel);
+    body.appendChild(forceGroup);
+
+    modal.appendChild(body);
+
+    const footer = Utils.createElement('div', { class: 'modal-footer' });
+    const cancelBtn = Utils.createElement('button', { type: 'button', class: 'btn btn-ghost' }, 'İptal');
+    cancelBtn.addEventListener('click', closeModal);
+    footer.appendChild(cancelBtn);
+
+    const confirmBtn = Utils.createElement('button', { type: 'button', class: 'btn btn-danger' }, 'Sil');
+    confirmBtn.addEventListener('click', async () => {
+        try {
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = 'Siliniyor...';
+            const forceDelete = document.getElementById('force-delete-warehouse').checked;
+            await API.delete(`/warehouses/${id}${forceDelete ? '?force=true' : ''}`);
+            closeModal();
+            Utils.toast.success('Depo silindi');
+            loadWarehouses();
+        } catch (error) {
+            Utils.toast.error(error.message || 'Depoda stok bulunuyor olabilir.');
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = 'Sil';
         }
-    } catch (error) {
-        // Stok kontrolü başarısız olursa devam et
-        console.warn('Stok kontrolü yapılamadı:', error);
-    }
+    });
+    footer.appendChild(confirmBtn);
+    modal.appendChild(footer);
 
-    if (!confirm(`"${name}" deposunu silmek istediğinize emin misiniz?`)) return;
-
-    try {
-        await API.delete(`/warehouses/${id}`);
-        alert('Depo silindi');
-        loadWarehouses();
-    } catch (error) {
-        alert(error.message || 'Bir hata oluştu. Depoda stok bulunuyor olabilir.');
-    }
+    overlay.appendChild(modal);
+    modalContainer.appendChild(overlay);
 }
 
 // Global fonksiyonlar

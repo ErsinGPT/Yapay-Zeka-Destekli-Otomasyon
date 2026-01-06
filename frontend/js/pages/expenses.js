@@ -294,10 +294,10 @@ async function createExpense(event) {
     try {
         await API.expenses.create(data);
         closeModal();
-        alert('Masraf kaydedildi');
+        Utils.toast.success('Masraf kaydedildi');
         loadExpenses();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 
@@ -308,10 +308,10 @@ async function approveExpense(id) {
     if (!confirm('Masraf onaylansın mı?')) return;
     try {
         await API.expenses.approve(id);
-        alert('Masraf onaylandı');
+        Utils.toast.success('Masraf onaylandı');
         loadExpenses();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 
@@ -324,10 +324,10 @@ async function rejectExpense(id) {
 
     try {
         await API.post(`/expenses/${id}/reject`, { rejection_reason: reason });
-        alert('Masraf reddedildi');
+        Utils.toast.info('Masraf reddedildi');
         loadExpenses();
     } catch (error) {
-        alert(error.message || 'Bir hata oluştu');
+        Utils.toast.error(error.message || 'Bir hata oluştu');
     }
 }
 
@@ -392,7 +392,7 @@ async function viewExpense(id) {
         overlay.appendChild(modal);
         modalContainer.appendChild(overlay);
     } catch (error) {
-        alert('Masraf yüklenemedi: ' + error.message);
+        Utils.toast.error('Masraf yüklenemedi: ' + error.message);
     }
 }
 

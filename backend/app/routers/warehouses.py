@@ -142,6 +142,7 @@ async def update_warehouse(
 @router.delete("/{warehouse_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_warehouse(
     warehouse_id: int,
+    force: bool = Query(False, description="Force delete even if warehouse has stock"),
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
@@ -160,10 +161,13 @@ async def delete_warehouse(
     ).first()
     
     if has_stock:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Stoğu olan depo silinemez"
-        )
+        if not force:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Stoğu olan depo silinemez. Zorla silmek için force=true kullanın."
+            )
+        # Force delete - clear stock records
+        db.query(WarehouseStock).filter(WarehouseStock.warehouse_id == warehouse_id).delete()
     
     warehouse.is_active = False
     db.commit()

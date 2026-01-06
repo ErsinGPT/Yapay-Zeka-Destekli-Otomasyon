@@ -319,3 +319,68 @@ async def create_quote(
     db.refresh(quote)
     
     return quote
+
+
+@router.delete("/{opportunity_id}")
+async def delete_opportunity(
+    opportunity_id: int,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+    """
+    Delete an opportunity.
+    
+    - If the opportunity was WON, the related project and all its data will be deleted
+    - All related quotes will be deleted
+    """
+    from sqlalchemy import text
+    
+    opportunity = db.query(Opportunity).filter(Opportunity.id == opportunity_id).first()
+    if not opportunity:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Fırsat bulunamadı"
+        )
+    
+    try:
+        # Disable foreign key checks temporarily for SQLite
+        db.execute(text("PRAGMA foreign_keys = OFF"))
+        
+        # If WON, delete related project and all its dependencies
+        if opportunity.status == OpportunityStatus.WON.value:
+            project = db.query(Project).filter(Project.opportunity_id == opportunity_id).first()
+            if project:
+                project_id = project.id
+                
+                # Delete in correct order using parameterized queries
+                db.execute(text("DELETE FROM invoice_items WHERE invoice_id IN (SELECT id FROM invoices WHERE project_id = :pid)"), {"pid": project_id})
+                db.execute(text("DELETE FROM service_form_items WHERE service_form_id IN (SELECT id FROM service_forms WHERE project_id = :pid)"), {"pid": project_id})
+                db.execute(text("DELETE FROM delivery_note_items WHERE delivery_note_id IN (SELECT id FROM delivery_notes WHERE project_id = :pid)"), {"pid": project_id})
+                db.execute(text("DELETE FROM stock_movements WHERE project_id = :pid"), {"pid": project_id})
+                db.execute(text("DELETE FROM stock_reservations WHERE project_id = :pid"), {"pid": project_id})
+                db.execute(text("DELETE FROM delivery_notes WHERE project_id = :pid"), {"pid": project_id})
+                db.execute(text("DELETE FROM service_forms WHERE project_id = :pid"), {"pid": project_id})
+                db.execute(text("DELETE FROM invoices WHERE project_id = :pid"), {"pid": project_id})
+                db.execute(text("DELETE FROM expenses WHERE project_id = :pid"), {"pid": project_id})
+                db.execute(text("DELETE FROM projects WHERE id = :pid"), {"pid": project_id})
+        
+        # Delete related quotes
+        db.execute(text("DELETE FROM quotes WHERE opportunity_id = :oid"), {"oid": opportunity_id})
+        
+        # Delete opportunity
+        db.execute(text("DELETE FROM opportunities WHERE id = :oid"), {"oid": opportunity_id})
+        
+        db.commit()
+        
+        # Re-enable foreign key checks
+        db.execute(text("PRAGMA foreign_keys = ON"))
+        
+        return {"message": "Fırsat silindi"}
+        
+    except Exception as e:
+        db.rollback()
+        db.execute(text("PRAGMA foreign_keys = ON"))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Silme işlemi başarısız: {str(e)}"
+        )
