@@ -179,6 +179,10 @@ function renderTable(data) {
         editBtn.addEventListener('click', () => editOpportunity(opp.id));
         actionTd.appendChild(editBtn);
 
+        const deleteBtn = Utils.createElement('button', { class: 'btn btn-ghost btn-sm', style: 'color: var(--danger);' }, 'Sil');
+        deleteBtn.addEventListener('click', () => deleteOpportunity(opp.id, opp.title, opp.status, opp.project_id));
+        actionTd.appendChild(deleteBtn);
+
         tr.appendChild(actionTd);
         tbody.appendChild(tr);
     });
@@ -472,6 +476,34 @@ async function updateOpportunity(event, id) {
         await API.put(`/opportunities/${id}`, data);
         closeModal();
         alert('Fırsat güncellendi');
+        loadOpportunities();
+    } catch (error) {
+        alert(error.message || 'Bir hata oluştu');
+    }
+}
+
+/**
+ * Fırsat sil
+ */
+async function deleteOpportunity(id, title, status, projectId) {
+    // Kazanılan veya kaybedilen fırsatlar için ekstra onay
+    if (status === 'WON' || status === 'LOST') {
+        const statusLabel = status === 'WON' ? 'KAZANILMIŞ' : 'KAYBEDILMIŞ';
+        const extraWarning = status === 'WON' && projectId
+            ? '\n\n⚠️ UYARI: Bu fırsat bir projeye dönüştürülmüştür! Silindiğinde ilgili proje de silinecektir!'
+            : '';
+
+        if (!confirm(`⚠️ DİKKAT! Bu fırsat "${statusLabel}" durumundadır.${extraWarning}\n\n"${title}" fırsatını silmek istediğinize EMiN misiniz?`)) return;
+
+        // İkinci onay
+        if (!confirm(`SON ONAY: "${title}" fırsatını ve ilişkili tüm verileri silmek istediğinizi tekrar onaylıyor musunuz?`)) return;
+    } else {
+        if (!confirm(`"${title}" fırsatını silmek istediğinize emin misiniz?`)) return;
+    }
+
+    try {
+        await API.delete(`/opportunities/${id}`);
+        alert('Fırsat silindi');
         loadOpportunities();
     } catch (error) {
         alert(error.message || 'Bir hata oluştu');

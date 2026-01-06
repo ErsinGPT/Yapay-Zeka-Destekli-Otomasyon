@@ -115,9 +115,17 @@ function renderTable(data) {
 
         // İşlemler
         const actionTd = Utils.createElement('td', { style: 'text-align: right;' });
+        const actionWrapper = Utils.createElement('div', { style: 'display: flex; gap: var(--spacing-xs); justify-content: flex-end;' });
+
         const editBtn = Utils.createElement('button', { class: 'btn btn-ghost btn-sm' }, 'Düzenle');
         editBtn.addEventListener('click', () => editCustomer(customer.id));
-        actionTd.appendChild(editBtn);
+        actionWrapper.appendChild(editBtn);
+
+        const deleteBtn = Utils.createElement('button', { class: 'btn btn-ghost btn-sm', style: 'color: var(--danger);' }, 'Sil');
+        deleteBtn.addEventListener('click', () => deleteCustomer(customer.id, customer.name));
+        actionWrapper.appendChild(deleteBtn);
+
+        actionTd.appendChild(actionWrapper);
         tr.appendChild(actionTd);
 
         tbody.appendChild(tr);
@@ -362,6 +370,21 @@ async function updateCustomer(event, id) {
         await API.put(`/customers/${id}`, data);
         closeModal();
         alert('Müşteri güncellendi');
+        loadCustomers();
+    } catch (error) {
+        alert(error.message || 'Bir hata oluştu');
+    }
+}
+
+/**
+ * Müşteri sil
+ */
+async function deleteCustomer(id, name) {
+    if (!confirm(`"${name}" müşterisini silmek istediğinize emin misiniz?`)) return;
+
+    try {
+        await API.delete(`/customers/${id}`);
+        alert('Müşteri silindi');
         loadCustomers();
     } catch (error) {
         alert(error.message || 'Bir hata oluştu');

@@ -18,21 +18,21 @@ Proje odaklı çalışan firmalar için geliştirilmiş geniş kapsamlı **CRM (
 - **Eksik Fonksiyonlar:** Sayfalarda bulunan eksik fonksiyonlar eklenecek
 
 ### 📦 Stok & Depo Modülü
-- [ ] Ürünler sayfası ve API endpointleri
-- [ ] Depolar sayfası ve API endpointleri
-- [ ] Stok Hareketleri sayfası ve API endpointleri
+- [X] Ürünler sayfası ve API endpointleri
+- [X] Depolar sayfası ve API endpointleri
+- [X] Stok Hareketleri sayfası ve API endpointleri
 
 ### 🔧 Operasyon Modülü
-- [ ] Servis Formları sayfası ve API endpointleri
-- [ ] Transferler (Sevkiyat İrsaliyeleri) sayfası ve API endpointleri
+- [X] Servis Formları sayfası ve API endpointleri
+- [X] Transferler (Sevkiyat İrsaliyeleri) sayfası ve API endpointleri
 
 ### 💰 Finans Modülü
-- [ ] Faturalar sayfası ve API endpointleri
-- [ ] Masraflar sayfası ve API endpointleri
+- [X] Faturalar sayfası ve API endpointleri
+- [X] Masraflar sayfası ve API endpointleri
 
 ### 📊 Raporlama & Ayarlar
-- [ ] Raporlar sayfası ve API endpointleri
-- [ ] Ayarlar sayfası ve API endpointleri
+- [X] Raporlar sayfası ve API endpointleri
+- [X] Ayarlar sayfası ve API endpointleri
 
 ---
 

@@ -98,7 +98,10 @@ function renderTable(data) {
         const tr = Utils.createElement('tr');
 
         // SKU
-        tr.appendChild(Utils.createElement('td', {}, Utils.createElement('code', {}, product.sku)));
+        const skuTd = Utils.createElement('td');
+        const skuCode = Utils.createElement('code', {}, product.sku);
+        skuTd.appendChild(skuCode);
+        tr.appendChild(skuTd);
 
         // Ürün Adı
         const nameTd = Utils.createElement('td');
@@ -267,6 +270,55 @@ function openCreateModal() {
 
     body.appendChild(row3);
 
+    // BOM Section
+    const bomSection = Utils.createElement('div', {
+        style: 'margin-top: var(--spacing-md); padding-top: var(--spacing-md); border-top: 1px solid var(--border-color);'
+    });
+    bomSection.appendChild(Utils.createElement('h4', { style: 'margin-bottom: var(--spacing-sm);' }, 'Ürün Ağacı (BOM)'));
+
+    // BOM gerekmiyor checkbox
+    const noBomGroup = Utils.createElement('div', { class: 'form-group' });
+    const noBomLabel = Utils.createElement('label', { style: 'display: flex; align-items: center; gap: var(--spacing-sm); cursor: pointer;' });
+    const noBomCheckbox = Utils.createElement('input', { type: 'checkbox', name: 'no_bom', id: 'no-bom-checkbox' });
+    noBomCheckbox.addEventListener('change', (e) => {
+        const bomControls = document.getElementById('bom-controls');
+        bomControls.style.display = e.target.checked ? 'none' : 'block';
+    });
+    noBomLabel.appendChild(noBomCheckbox);
+    noBomLabel.appendChild(document.createTextNode('BOM Gerekmiyor (Basit Ürün)'));
+    noBomGroup.appendChild(noBomLabel);
+    bomSection.appendChild(noBomGroup);
+
+    // BOM kontrolleri
+    const bomControls = Utils.createElement('div', { id: 'bom-controls' });
+
+    const bomList = Utils.createElement('div', { id: 'bom-items', style: 'margin-bottom: var(--spacing-sm);' });
+    bomControls.appendChild(bomList);
+
+    // BOM ekleme
+    const bomAddRow = Utils.createElement('div', { class: 'form-row' });
+
+    const bomProductGroup = Utils.createElement('div', { class: 'form-group', style: 'flex: 2;' });
+    const bomProductSelect = Utils.createElement('select', { class: 'form-select', id: 'bom-product-select' });
+    bomProductSelect.appendChild(Utils.createElement('option', { value: '' }, 'Malzeme seçin...'));
+    products.forEach(p => {
+        bomProductSelect.appendChild(Utils.createElement('option', { value: p.id }, `${p.sku} - ${p.name}`));
+    });
+    bomProductGroup.appendChild(bomProductSelect);
+    bomAddRow.appendChild(bomProductGroup);
+
+    const bomQtyGroup = Utils.createElement('div', { class: 'form-group', style: 'flex: 1;' });
+    bomQtyGroup.appendChild(Utils.createElement('input', { type: 'number', class: 'form-input', id: 'bom-qty-input', placeholder: 'Miktar', min: '1', value: '1' }));
+    bomAddRow.appendChild(bomQtyGroup);
+
+    const addBomBtn = Utils.createElement('button', { type: 'button', class: 'btn btn-outline btn-sm' }, '+ Ekle');
+    addBomBtn.addEventListener('click', addBomItem);
+    bomAddRow.appendChild(addBomBtn);
+
+    bomControls.appendChild(bomAddRow);
+    bomSection.appendChild(bomControls);
+    body.appendChild(bomSection);
+
     form.appendChild(body);
 
     // Footer
@@ -300,7 +352,7 @@ async function createProduct(event) {
 
     const data = {};
     formData.forEach((value, key) => {
-        if (value) {
+        if (value && key !== 'no_bom') {
             if (['list_price', 'cost', 'category_id'].includes(key)) {
                 data[key] = parseFloat(value) || parseInt(value);
             } else {
@@ -310,7 +362,18 @@ async function createProduct(event) {
     });
 
     try {
-        await API.products.create(data);
+        const product = await API.products.create(data);
+
+        // BOM varsa ekle
+        if (bomItems.length > 0 && !form.querySelector('#no-bom-checkbox').checked) {
+            const bomData = bomItems.map(item => ({
+                child_product_id: item.child_product_id,
+                quantity: item.quantity
+            }));
+            await API.products.updateBom(product.id, bomData);
+        }
+
+        bomItems = []; // Reset BOM items
         closeModal();
         alert('Ürün başarıyla oluşturuldu');
         loadProducts();
@@ -563,6 +626,14 @@ function openCategoryModal() {
                 style: 'padding: var(--spacing-sm); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;'
             });
             item.appendChild(Utils.createElement('span', {}, cat.name));
+
+            const deleteBtn = Utils.createElement('button', {
+                class: 'btn btn-ghost btn-sm',
+                style: 'color: var(--danger);'
+            }, '×');
+            deleteBtn.addEventListener('click', () => deleteCategory(cat.id, cat.name));
+            item.appendChild(deleteBtn);
+
             list.appendChild(item);
         });
     }
@@ -596,6 +667,88 @@ async function createCategory(event) {
     } catch (error) {
         alert(error.message || 'Bir hata oluştu');
     }
+}
+
+/**
+ * Kategori sil
+ */
+async function deleteCategory(id, name) {
+    if (!confirm(`"${name}" kategorisini silmek istediğinize emin misiniz?`)) return;
+
+    try {
+        await API.delete(`/products/categories/${id}`);
+        await loadCategories();
+        openCategoryModal();
+    } catch (error) {
+        alert(error.message || 'Bir hata oluştu. Bu kategoride ürün bulunuyor olabilir.');
+    }
+}
+
+// BOM ekleme
+let bomItems = [];
+
+function addBomItem() {
+    const productSelect = document.getElementById('bom-product-select');
+    const qtyInput = document.getElementById('bom-qty-input');
+
+    const productId = parseInt(productSelect.value);
+    const qty = parseInt(qtyInput.value) || 1;
+
+    if (!productId) {
+        alert('Lütfen bir malzeme seçin');
+        return;
+    }
+
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+
+    // Zaten ekliyse miktarı güncelle
+    const existing = bomItems.find(b => b.child_product_id === productId);
+    if (existing) {
+        existing.quantity += qty;
+    } else {
+        bomItems.push({
+            child_product_id: productId,
+            child_product_name: product.name,
+            child_product_sku: product.sku,
+            quantity: qty
+        });
+    }
+
+    renderBomItems();
+    productSelect.value = '';
+    qtyInput.value = '1';
+}
+
+function removeBomItem(productId) {
+    bomItems = bomItems.filter(b => b.child_product_id !== productId);
+    renderBomItems();
+}
+
+function renderBomItems() {
+    const container = document.getElementById('bom-items');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    if (bomItems.length === 0) {
+        container.appendChild(Utils.createElement('p', { style: 'color: var(--text-muted); font-size: var(--font-size-sm);' }, 'Henüz malzeme eklenmedi'));
+        return;
+    }
+
+    bomItems.forEach(item => {
+        const row = Utils.createElement('div', {
+            style: 'display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-xs); background: var(--bg-tertiary); border-radius: var(--radius-sm); margin-bottom: var(--spacing-xs);'
+        });
+
+        row.appendChild(Utils.createElement('span', {}, `${item.child_product_sku} - ${item.child_product_name} (x${item.quantity})`));
+
+        const removeBtn = Utils.createElement('button', { type: 'button', class: 'btn btn-ghost btn-sm', style: 'color: var(--danger);' }, '×');
+        removeBtn.addEventListener('click', () => removeBomItem(item.child_product_id));
+        row.appendChild(removeBtn);
+
+        container.appendChild(row);
+    });
 }
 
 // Global fonksiyonlar

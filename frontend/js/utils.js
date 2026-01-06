@@ -253,6 +253,87 @@ const Utils = {
             'EXPORT': 'İhracat'
         };
         return translations[status] || status;
+    },
+
+    /**
+     * Toast notification göster
+     * @param {string} message - Gösterilecek mesaj
+     * @param {string} type - 'success', 'error', 'warning', 'info'
+     * @param {number} duration - Gösterim süresi (ms)
+     */
+    showToast(message, type = 'info', duration = 3000) {
+        const container = document.getElementById('toast-container') || this.createToastContainer();
+
+        const toast = this.createElement('div', {
+            class: `toast toast-${type}`
+        });
+
+        const icons = {
+            success: '✓',
+            error: '✕',
+            warning: '⚠',
+            info: 'ℹ'
+        };
+
+        const iconSpan = this.createElement('span', { class: 'toast-icon' }, icons[type] || 'ℹ');
+        const messageSpan = this.createElement('span', { class: 'toast-message' }, message);
+        const closeBtn = this.createElement('button', { class: 'toast-close' }, '×');
+
+        closeBtn.addEventListener('click', () => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        });
+
+        toast.appendChild(iconSpan);
+        toast.appendChild(messageSpan);
+        toast.appendChild(closeBtn);
+        container.appendChild(toast);
+
+        // Animate in
+        requestAnimationFrame(() => {
+            toast.classList.add('show');
+        });
+
+        // Auto remove
+        if (duration > 0) {
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+
+        return toast;
+    },
+
+    /**
+     * Toast container oluştur
+     */
+    createToastContainer() {
+        let container = document.getElementById('toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            document.body.appendChild(container);
+        }
+        return container;
+    },
+
+    /**
+     * Success toast
+     */
+    toast: {
+        success(message, duration = 3000) {
+            Utils.showToast(message, 'success', duration);
+        },
+        error(message, duration = 5000) {
+            Utils.showToast(message, 'error', duration);
+        },
+        warning(message, duration = 4000) {
+            Utils.showToast(message, 'warning', duration);
+        },
+        info(message, duration = 3000) {
+            Utils.showToast(message, 'info', duration);
+        }
     }
 };
 

@@ -126,6 +126,10 @@ function renderCards(data) {
         editBtn.addEventListener('click', () => editWarehouse(warehouse.id));
         footer.appendChild(editBtn);
 
+        const deleteBtn = Utils.createElement('button', { class: 'btn btn-ghost btn-sm', style: 'color: var(--danger);' }, 'Sil');
+        deleteBtn.addEventListener('click', () => deleteWarehouse(warehouse.id, warehouse.name));
+        footer.appendChild(deleteBtn);
+
         card.appendChild(footer);
         container.appendChild(card);
     });
@@ -392,7 +396,13 @@ async function viewWarehouseStock(warehouseId) {
             const tbody = Utils.createElement('tbody');
             stock.forEach(item => {
                 const tr = Utils.createElement('tr');
-                tr.appendChild(Utils.createElement('td', {}, Utils.createElement('code', {}, item.product_sku || '-')));
+
+                // SKU with code element
+                const skuTd = Utils.createElement('td');
+                const skuCode = Utils.createElement('code', {}, item.product_sku || '-');
+                skuTd.appendChild(skuCode);
+                tr.appendChild(skuTd);
+
                 tr.appendChild(Utils.createElement('td', {}, item.product_name || 'İsimsiz'));
                 tr.appendChild(Utils.createElement('td', {}, item.quantity?.toString() || '0'));
                 tr.appendChild(Utils.createElement('td', {}, item.reserved_quantity?.toString() || '0'));
@@ -423,6 +433,35 @@ async function viewWarehouseStock(warehouseId) {
         modalContainer.appendChild(overlay);
     } catch (error) {
         alert('Stok yüklenemedi: ' + error.message);
+    }
+}
+
+/**
+ * Depo sil
+ */
+async function deleteWarehouse(id, name) {
+    // Önce stok kontrolü yap
+    try {
+        const stock = await API.warehouses.getStock(id);
+        const totalStock = stock.reduce((sum, item) => sum + (item.quantity || 0), 0);
+
+        if (totalStock > 0) {
+            alert(`"${name}" deposunda ${totalStock} adet stok bulunmaktadır. Silmeden önce stokları başka bir depoya transfer etmeniz gerekmektedir.`);
+            return;
+        }
+    } catch (error) {
+        // Stok kontrolü başarısız olursa devam et
+        console.warn('Stok kontrolü yapılamadı:', error);
+    }
+
+    if (!confirm(`"${name}" deposunu silmek istediğinize emin misiniz?`)) return;
+
+    try {
+        await API.delete(`/warehouses/${id}`);
+        alert('Depo silindi');
+        loadWarehouses();
+    } catch (error) {
+        alert(error.message || 'Bir hata oluştu. Depoda stok bulunuyor olabilir.');
     }
 }
 
