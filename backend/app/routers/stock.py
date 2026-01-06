@@ -45,43 +45,39 @@ def get_or_create_warehouse_stock(db: Session, warehouse_id: int, product_id: in
 
 @router.get("/")
 async def get_stock_summary(
-    product_id: Optional[int] = None,
-    warehouse_id: Optional[int] = None,
     db: Session = Depends(get_db)
 ):
     """
-    Get total stock summary.
-    Returns physical stock and available stock (after reservations).
+    Get stock summary statistics.
+    Returns totals for products, stock, low stock, and reservations.
     """
-    query = db.query(WarehouseStock)
+    # Total products with stock
+    total_products = db.query(func.count(func.distinct(WarehouseStock.product_id))).scalar() or 0
     
-    if product_id:
-        query = query.filter(WarehouseStock.product_id == product_id)
+    # Total stock quantity
+    total_stock = db.query(func.sum(WarehouseStock.quantity)).scalar() or 0
     
-    if warehouse_id:
-        query = query.filter(WarehouseStock.warehouse_id == warehouse_id)
+    # Low stock count (products below min_stock_level)
+    low_stock_count = 0
+    products_with_stock = db.query(
+        WarehouseStock.product_id,
+        func.sum(WarehouseStock.quantity).label('total_qty')
+    ).group_by(WarehouseStock.product_id).all()
     
-    stocks = query.all()
+    for ps in products_with_stock:
+        product = db.query(Product).filter(Product.id == ps.product_id).first()
+        if product and product.min_stock_level and ps.total_qty < product.min_stock_level:
+            low_stock_count += 1
     
-    result = []
-    for stock in stocks:
-        product = db.query(Product).filter(Product.id == stock.product_id).first()
-        warehouse = db.query(Warehouse).filter(Warehouse.id == stock.warehouse_id).first()
-        
-        result.append({
-            "id": stock.id,
-            "warehouse_id": stock.warehouse_id,
-            "warehouse_name": warehouse.name if warehouse else None,
-            "warehouse_code": warehouse.code if warehouse else None,
-            "product_id": stock.product_id,
-            "product_name": product.name if product else None,
-            "product_sku": product.sku if product else None,
-            "quantity": float(stock.quantity),
-            "reserved_quantity": float(stock.reserved_quantity or 0),
-            "available_quantity": float(stock.quantity - (stock.reserved_quantity or 0))
-        })
+    # Reserved stock
+    reserved_stock = db.query(func.sum(WarehouseStock.reserved_quantity)).scalar() or 0
     
-    return result
+    return {
+        "total_products": total_products,
+        "total_stock": float(total_stock),
+        "low_stock_count": low_stock_count,
+        "reserved_stock": float(reserved_stock)
+    }
 
 
 @router.post("/transfer")
@@ -338,6 +334,9 @@ async def get_stock_movements(
     result = []
     for mov in movements:
         product = db.query(Product).filter(Product.id == mov.product_id).first()
+        from_warehouse = db.query(Warehouse).filter(Warehouse.id == mov.from_warehouse_id).first() if mov.from_warehouse_id else None
+        to_warehouse = db.query(Warehouse).filter(Warehouse.id == mov.to_warehouse_id).first() if mov.to_warehouse_id else None
+        
         result.append({
             "id": mov.id,
             "project_id": mov.project_id,
@@ -345,7 +344,9 @@ async def get_stock_movements(
             "product_name": product.name if product else None,
             "movement_type": mov.movement_type,
             "from_warehouse_id": mov.from_warehouse_id,
+            "from_warehouse_name": from_warehouse.name if from_warehouse else None,
             "to_warehouse_id": mov.to_warehouse_id,
+            "to_warehouse_name": to_warehouse.name if to_warehouse else None,
             "quantity": mov.quantity,
             "unit_cost": mov.unit_cost,
             "reference_type": mov.reference_type,
@@ -364,10 +365,11 @@ async def create_stock_movement(
     current_user = Depends(get_current_user)
 ):
     """Create manual stock movement (IN, OUT, ADJUSTMENT)"""
-    # Validate project
-    project = db.query(Project).filter(Project.id == movement.project_id).first()
-    if not project:
-        raise HTTPException(status_code=404, detail="Proje bulunamadı")
+    # Validate project only if provided
+    if movement.project_id:
+        project = db.query(Project).filter(Project.id == movement.project_id).first()
+        if not project:
+            raise HTTPException(status_code=404, detail="Proje bulunamadı")
     
     # Validate product
     product = db.query(Product).filter(Product.id == movement.product_id).first()

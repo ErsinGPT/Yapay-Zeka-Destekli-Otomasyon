@@ -399,7 +399,7 @@ class StockReservationResponse(BaseModel):
 
 class StockMovementCreate(BaseModel):
     """Create manual stock movement"""
-    project_id: int
+    project_id: Optional[int] = None  # Optional for manual movements
     product_id: int
     movement_type: str
     from_warehouse_id: Optional[int] = None

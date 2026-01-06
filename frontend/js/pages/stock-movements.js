@@ -11,6 +11,7 @@ import '../layout-loader.js';
 let movements = [];
 let warehouses = [];
 let products = [];
+let projects = [];
 
 /**
  * Başlangıç verileri yükle
@@ -24,6 +25,7 @@ async function loadInitialData() {
         });
 
         products = await API.products.getAll();
+        projects = await API.projects.getAll();
     } catch (error) {
         console.error('Başlangıç verileri yüklenemedi:', error);
     }
@@ -41,7 +43,6 @@ async function loadSummary() {
         const stats = [
             { label: 'Toplam Ürün', value: summary.total_products || 0, icon: '📦' },
             { label: 'Toplam Stok', value: summary.total_stock || 0, icon: '📊' },
-            { label: 'Düşük Stok', value: summary.low_stock_count || 0, icon: '⚠️', danger: true },
             { label: 'Rezerve', value: summary.reserved_stock || 0, icon: '🔒' }
         ];
 
@@ -114,7 +115,7 @@ function renderTable(data) {
     // Thead
     const thead = Utils.createElement('thead');
     const headerRow = Utils.createElement('tr');
-    ['Tarih', 'Tip', 'Ürün', 'Çıkış Depo', 'Giriş Depo', 'Miktar', 'Açıklama'].forEach(text => {
+    ['Tarih', 'Tip', 'Ürün', 'Depo', 'Miktar', 'Açıklama'].forEach(text => {
         headerRow.appendChild(Utils.createElement('th', {}, text));
     });
     thead.appendChild(headerRow);
@@ -143,17 +144,17 @@ function renderTable(data) {
         // Ürün
         tr.appendChild(Utils.createElement('td', {}, movement.product_name || '-'));
 
-        // Çıkış Depo
-        tr.appendChild(Utils.createElement('td', {}, movement.from_warehouse_name || '-'));
-
-        // Giriş Depo
-        tr.appendChild(Utils.createElement('td', {}, movement.to_warehouse_name || '-'));
+        // Depo (Girişte to_warehouse, Çıkışta from_warehouse)
+        const warehouseName = movement.movement_type === 'IN'
+            ? movement.to_warehouse_name
+            : movement.from_warehouse_name;
+        tr.appendChild(Utils.createElement('td', {}, warehouseName || '-'));
 
         // Miktar
         tr.appendChild(Utils.createElement('td', {}, movement.quantity?.toString() || '0'));
 
         // Açıklama
-        tr.appendChild(Utils.createElement('td', {}, movement.description || '-'));
+        tr.appendChild(Utils.createElement('td', {}, movement.notes || '-'));
 
         tbody.appendChild(tr);
     });
@@ -202,6 +203,17 @@ function openMovementModal() {
     typeSelect.appendChild(Utils.createElement('option', { value: 'OUT' }, 'Çıkış'));
     typeGroup.appendChild(typeSelect);
     body.appendChild(typeGroup);
+
+    // Proje
+    const projectGroup = Utils.createElement('div', { class: 'form-group' });
+    projectGroup.appendChild(Utils.createElement('label', { class: 'form-label required' }, 'Proje'));
+    const projectSelect = Utils.createElement('select', { class: 'form-select', name: 'project_id', required: '' });
+    projectSelect.appendChild(Utils.createElement('option', { value: '' }, 'Seçiniz'));
+    projects.forEach(p => {
+        projectSelect.appendChild(Utils.createElement('option', { value: p.id }, `${p.project_code} - ${p.title}`));
+    });
+    projectGroup.appendChild(projectSelect);
+    body.appendChild(projectGroup);
 
     // Ürün
     const productGroup = Utils.createElement('div', { class: 'form-group' });
@@ -357,7 +369,7 @@ async function createMovement(event) {
     const data = {};
     formData.forEach((value, key) => {
         if (value) {
-            if (['product_id', 'warehouse_id', 'quantity'].includes(key)) {
+            if (['product_id', 'warehouse_id', 'quantity', 'project_id'].includes(key)) {
                 data[key] = parseInt(value);
             } else {
                 data[key] = value;

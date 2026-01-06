@@ -110,8 +110,8 @@ class StockMovement(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     
-    # MANDATORY: Every movement must be linked to a project
-    project_id = Column(Integer, ForeignKey("projects.id"), nullable=False)
+    # Optional: movements can be linked to a project
+    project_id = Column(Integer, ForeignKey("projects.id"), nullable=True)
     
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
     
