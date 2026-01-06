@@ -3,9 +3,30 @@
  */
 
 const Header = {
+    // Sayfa adları için mapping
+    pageTitles: {
+        'dashboard': 'Dashboard',
+        'customers': 'Müşteriler',
+        'opportunities': 'Fırsatlar',
+        'projects': 'Projeler',
+        'products': 'Ürünler',
+        'warehouses': 'Depolar',
+        'stock-movements': 'Stok Hareketleri',
+        'service-forms': 'Servis Formları',
+        'transfers': 'Transferler',
+        'invoices': 'Faturalar',
+        'expenses': 'Masraflar',
+        'reports': 'Raporlar',
+        'settings': 'Ayarlar'
+    },
+
     render() {
         const user = Auth.getUser();
         const initials = Utils.getInitials(user?.email || 'User');
+
+        // Aktif sayfayı al
+        const currentPage = document.body.dataset.page || 'dashboard';
+        const pageTitle = this.pageTitles[currentPage] || 'Dashboard';
 
         return `
             <header class="header">
@@ -20,7 +41,7 @@ const Header = {
                     <nav class="breadcrumb">
                         <span class="breadcrumb-item">Otomasyon CRM</span>
                         <span class="breadcrumb-separator">/</span>
-                        <span class="breadcrumb-item active">Dashboard</span>
+                        <span class="breadcrumb-item active">${pageTitle}</span>
                     </nav>
                 </div>
                 
@@ -32,6 +53,7 @@ const Header = {
                     <button class="header-icon-btn" title="Bildirimler">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                         </svg>
                     </button>
                     <div class="user-menu" id="user-dropdown">

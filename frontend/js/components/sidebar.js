@@ -18,7 +18,7 @@ const Sidebar = {
                     <div class="sidebar-logo">
                         <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
                             <rect width="36" height="36" rx="8" fill="#3498DB"/>
-                            <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="16" font-weight="bold">B</text>
+                            <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="16" font-weight="bold">O</text>
                         </svg>
                         <span>Otomasyon CRM</span>
                     </div>
@@ -60,7 +60,6 @@ const Sidebar = {
                                 </svg>
                             </span>
                             <span class="nav-item-text">Fırsatlar</span>
-                            <span class="nav-item-badge">5</span>
                         </div>
                         <div class="nav-item" data-page="projects">
                             <span class="nav-item-icon">
@@ -149,7 +148,6 @@ const Sidebar = {
                                 </svg>
                             </span>
                             <span class="nav-item-text">Masraflar</span>
-                            <span class="nav-item-badge">3</span>
                         </div>
                     </div>
                     

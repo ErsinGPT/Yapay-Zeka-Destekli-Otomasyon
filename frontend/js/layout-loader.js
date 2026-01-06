@@ -21,6 +21,9 @@ const LayoutLoader = {
 
         // Aktif sayfa menü öğesini işaretle
         this.setActivePage();
+
+        // Sidebar scroll pozisyonunu geri yükle
+        this.restoreSidebarScroll();
     },
 
     /**
@@ -45,6 +48,9 @@ const LayoutLoader = {
 
         // Sidebar event'lerini initialize et
         Sidebar.init();
+
+        // Sayfa değişmeden önce scroll pozisyonunu kaydet
+        this.setupScrollSave();
     },
 
     /**
@@ -87,13 +93,63 @@ const LayoutLoader = {
         if (activeItem) {
             activeItem.classList.add('active');
         }
+    },
+
+    /**
+     * Layout yüklendikten sonra sayfayı göster
+     * CSS'de .app-layout başlangıçta gizli, bu fonksiyon visible yapar
+     */
+    showLayout() {
+        const appLayout = document.querySelector('.app-layout');
+        if (appLayout) {
+            appLayout.classList.add('layout-loaded');
+        }
+    },
+
+    /**
+     * Sidebar scroll pozisyonunu kaydetmek için event listener ekle
+     */
+    setupScrollSave() {
+        // Sayfa değişmeden önce scroll pozisyonunu kaydet
+        window.addEventListener('beforeunload', () => {
+            const sidebarNav = document.querySelector('.sidebar-nav');
+            if (sidebarNav) {
+                sessionStorage.setItem('sidebarScrollTop', sidebarNav.scrollTop);
+            }
+        });
+
+        // Link tıklamalarında da kaydet
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const sidebarNav = document.querySelector('.sidebar-nav');
+                if (sidebarNav) {
+                    sessionStorage.setItem('sidebarScrollTop', sidebarNav.scrollTop);
+                }
+            });
+        });
+    },
+
+    /**
+     * Sidebar scroll pozisyonunu geri yükle
+     */
+    restoreSidebarScroll() {
+        const savedScrollTop = sessionStorage.getItem('sidebarScrollTop');
+        if (savedScrollTop) {
+            const sidebarNav = document.querySelector('.sidebar-nav');
+            if (sidebarNav) {
+                sidebarNav.scrollTop = parseInt(savedScrollTop, 10);
+            }
+        }
     }
 };
 
 // Sayfa yüklendiğinde layout'u yükle
 document.addEventListener('DOMContentLoaded', async () => {
     await LayoutLoader.init();
+    // Layout yüklendikten sonra sayfayı göster
+    LayoutLoader.showLayout();
 });
 
 // Global erişim için export et
 window.LayoutLoader = LayoutLoader;
+

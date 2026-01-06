@@ -7,6 +7,13 @@
 .app-layout {
     display: flex;
     min-height: 100vh;
+    /* Sayfa yüklenene kadar gizle - layout-loader.js tarafından kaldırılır */
+    visibility: hidden;
+}
+
+/* Layout yüklendiğinde görünür yap - anında, transition yok */
+.app-layout.layout-loaded {
+    visibility: visible;
 }
 
 /* ===== SIDEBAR ===== */
