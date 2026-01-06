@@ -7,9 +7,10 @@ from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 import os
 
-from app.config import settings
+from app.config import settings as app_settings
 from app.database import engine, Base
-from app.routers import auth, users, customers, opportunities, projects, products, warehouses, stock, invoices, expenses, service_forms, reports
+from app.routers import auth, users, customers, opportunities, projects, products, warehouses, stock, invoices, expenses, service_forms, delivery_notes, reports
+from app.routers import settings as settings_router
 
 
 @asynccontextmanager
@@ -19,7 +20,7 @@ async def lifespan(app: FastAPI):
     print("🚀 Otomasyon CRM başlatılıyor...")
     
     # Create upload directory if not exists
-    os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
+    os.makedirs(app_settings.UPLOAD_DIR, exist_ok=True)
     
     # TODO: Start TCMB currency scheduler
     
@@ -67,10 +68,10 @@ class DynamicCORSMiddleware(BaseHTTPMiddleware):
 app.add_middleware(DynamicCORSMiddleware)
 
 # Create upload directory if not exists (must be before mount)
-os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
+os.makedirs(app_settings.UPLOAD_DIR, exist_ok=True)
 
 # Static files for uploads
-app.mount("/uploads", StaticFiles(directory=settings.UPLOAD_DIR), name="uploads")
+app.mount("/uploads", StaticFiles(directory=app_settings.UPLOAD_DIR), name="uploads")
 
 # Include routers
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
@@ -84,7 +85,9 @@ app.include_router(stock.router, prefix="/api/stock", tags=["Inventory - Stock"]
 app.include_router(invoices.router, prefix="/api/invoices", tags=["Finance - Invoices"])
 app.include_router(expenses.router, prefix="/api/expenses", tags=["Finance - Expenses"])
 app.include_router(service_forms.router, prefix="/api/service-forms", tags=["Operations - Service Forms"])
+app.include_router(delivery_notes.router, prefix="/api/delivery-notes", tags=["Operations - Delivery Notes"])
 app.include_router(reports.router, prefix="/api/reports", tags=["Reports"])
+app.include_router(settings_router.router, prefix="/api/settings", tags=["Settings"])
 
 
 @app.get("/", tags=["Health"])
