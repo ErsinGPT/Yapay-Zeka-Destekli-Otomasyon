@@ -26,6 +26,12 @@ EXPENSE_TYPES = ["TRAVEL", "ACCOMMODATION", "FOOD", "TRANSPORT", "MATERIAL", "OT
 EXPENSE_STATUSES = ["PENDING", "APPROVED", "REJECTED"]
 
 
+def is_admin_or_manager(user) -> bool:
+    """Check if user has admin or manager role"""
+    user_role = user.role.name if user.role else ""
+    return user_role in ["admin", "manager"]
+
+
 @router.get("/", response_model=List[ExpenseResponse])
 async def get_expenses(
     project_id: Optional[int] = None,
@@ -42,7 +48,8 @@ async def get_expenses(
     
     # Role-based filtering: regular users see only their expenses
     # Admin/Manager can see all
-    if not current_user.is_superuser and current_user.role not in ["admin", "manager"]:
+    user_role = current_user.role.name if current_user.role else ""
+    if user_role not in ["admin", "manager"]:
         query = query.filter(Expense.user_id == current_user.id)
     elif user_id:
         query = query.filter(Expense.user_id == user_id)
@@ -138,7 +145,7 @@ async def get_expense(
         raise HTTPException(status_code=404, detail="Masraf bulunamadı")
     
     # Check access
-    if not current_user.is_superuser and current_user.role not in ["admin", "manager"]:
+    if not is_admin_or_manager(current_user):
         if expense.user_id != current_user.id:
             raise HTTPException(status_code=403, detail="Bu masrafa erişim yetkiniz yok")
     
@@ -207,8 +214,8 @@ async def delete_expense(
     if not expense:
         raise HTTPException(status_code=404, detail="Masraf bulunamadı")
     
-    # Only owner can delete
-    if expense.user_id != current_user.id and not current_user.is_superuser:
+    # Only owner or admin can delete
+    if expense.user_id != current_user.id and not is_admin_or_manager(current_user):
         raise HTTPException(status_code=403, detail="Sadece kendi masraflarınızı silebilirsiniz")
     
     if expense.status != "PENDING":
@@ -229,7 +236,7 @@ async def approve_expense(
     When approved, creates automatic CREDIT entry in personnel account.
     """
     # Check permission
-    if not current_user.is_superuser and current_user.role not in ["admin", "manager"]:
+    if not is_admin_or_manager(current_user):
         raise HTTPException(status_code=403, detail="Masraf onaylama yetkiniz yok")
     
     expense = db.query(Expense).filter(Expense.id == expense_id).first()
@@ -289,7 +296,7 @@ async def reject_expense(
 ):
     """Reject expense with reason"""
     # Check permission
-    if not current_user.is_superuser and current_user.role not in ["admin", "manager"]:
+    if not is_admin_or_manager(current_user):
         raise HTTPException(status_code=403, detail="Masraf reddetme yetkiniz yok")
     
     expense = db.query(Expense).filter(Expense.id == expense_id).first()
@@ -366,7 +373,7 @@ async def get_personnel_account(
     Shows balance and transaction history.
     """
     # Check access
-    if not current_user.is_superuser and current_user.role not in ["admin", "manager"]:
+    if not is_admin_or_manager(current_user):
         if user_id != current_user.id:
             raise HTTPException(status_code=403, detail="Bu hesaba erişim yetkiniz yok")
     
@@ -405,7 +412,7 @@ async def get_personnel_transactions(
 ):
     """Get personnel account transactions"""
     # Check access
-    if not current_user.is_superuser and current_user.role not in ["admin", "manager"]:
+    if not is_admin_or_manager(current_user):
         if user_id != current_user.id:
             raise HTTPException(status_code=403, detail="Bu hesaba erişim yetkiniz yok")
     
@@ -431,7 +438,7 @@ async def record_payment(
 ):
     """Record payment to personnel (reduces balance)"""
     # Check permission
-    if not current_user.is_superuser and current_user.role not in ["admin", "manager"]:
+    if not is_admin_or_manager(current_user):
         raise HTTPException(status_code=403, detail="Ödeme kaydetme yetkiniz yok")
     
     user = db.query(User).filter(User.id == user_id).first()

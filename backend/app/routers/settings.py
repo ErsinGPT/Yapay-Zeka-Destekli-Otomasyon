@@ -81,7 +81,8 @@ async def update_settings(
 ):
     """Update all application settings"""
     # Check admin permission
-    if not current_user.is_superuser and current_user.role != "admin":
+    user_role = current_user.role.name if current_user.role else ""
+    if user_role != "admin":
         raise HTTPException(status_code=403, detail="Ayarları güncelleme yetkiniz yok")
     
     data = settings_update.model_dump()
@@ -110,7 +111,8 @@ async def update_company_settings(
 ):
     """Update company settings"""
     # Check admin permission
-    if not current_user.is_superuser and current_user.role != "admin":
+    user_role = current_user.role.name if current_user.role else ""
+    if user_role != "admin":
         raise HTTPException(status_code=403, detail="Şirket ayarlarını güncelleme yetkiniz yok")
     
     data = load_settings()
@@ -138,7 +140,8 @@ async def update_invoice_numbering(
 ):
     """Update invoice numbering settings"""
     # Check admin permission
-    if not current_user.is_superuser and current_user.role != "admin":
+    user_role = current_user.role.name if current_user.role else ""
+    if user_role != "admin":
         raise HTTPException(status_code=403, detail="Fatura numaralama ayarlarını güncelleme yetkiniz yok")
     
     data = load_settings()
