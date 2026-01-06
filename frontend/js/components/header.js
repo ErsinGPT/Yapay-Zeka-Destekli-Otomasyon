@@ -2,6 +2,9 @@
  * Otomasyon CRM - Header Component
  */
 
+import { Auth } from '../auth.js';
+import { Utils } from '../utils.js';
+
 const Header = {
     // Sayfa adları için mapping
     pageTitles: {
@@ -75,4 +78,7 @@ const Header = {
     }
 };
 
+export { Header };
+
+// Global erişim için
 window.Header = Header;

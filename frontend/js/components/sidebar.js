@@ -2,6 +2,8 @@
  * Otomasyon CRM - Sidebar Component
  */
 
+import { Auth } from '../auth.js';
+
 const Sidebar = {
     isCollapsed: false,
     isMobileOpen: false,
@@ -258,5 +260,7 @@ const Sidebar = {
     }
 };
 
-// Export for use
+export { Sidebar };
+
+// Global erişim için (onclick handler'lar için gerekli)
 window.Sidebar = Sidebar;

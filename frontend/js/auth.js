@@ -2,6 +2,8 @@
  * Otomasyon CRM - Authentication Module
  */
 
+import { API } from './api.js';
+
 const Auth = {
     currentUser: null,
 
@@ -93,5 +95,4 @@ const Auth = {
     }
 };
 
-// Export for use
-window.Auth = Auth;
+export { Auth };

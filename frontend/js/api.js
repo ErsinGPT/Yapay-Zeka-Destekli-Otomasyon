@@ -2,8 +2,12 @@
  * Otomasyon CRM - API Client
  */
 
+import { Config } from './config.js';
+
 const API = {
-    baseUrl: 'http://localhost:8000/api',
+    get baseUrl() {
+        return Config.apiUrl;
+    },
 
     /**
      * Get auth token from storage
@@ -269,5 +273,4 @@ const API = {
     }
 };
 
-// Export for use
-window.API = API;
+export { API };

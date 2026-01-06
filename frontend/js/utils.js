@@ -4,6 +4,66 @@
 
 const Utils = {
     /**
+     * XSS Korumalı HTML Sanitization
+     * Sadece güvenli etiketlere ve attribute'lara izin verir
+     */
+    sanitizeHTML(str) {
+        if (!str) return '';
+
+        // Temel XSS karakterlerini escape et
+        const escapeMap = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#x27;',
+            '/': '&#x2F;'
+        };
+
+        return String(str).replace(/[&<>"'/]/g, char => escapeMap[char]);
+    },
+
+    /**
+     * Güvenli text content oluşturma
+     */
+    createTextNode(text) {
+        return document.createTextNode(text || '');
+    },
+
+    /**
+     * Güvenli element oluşturma
+     */
+    createElement(tag, attributes = {}, textContent = '') {
+        const element = document.createElement(tag);
+
+        // Güvenli attribute'ları ekle
+        const safeAttributes = ['class', 'id', 'style', 'type', 'name', 'value', 'placeholder',
+            'disabled', 'readonly', 'required', 'href', 'src', 'alt', 'title',
+            'colspan', 'rowspan', 'data-id', 'data-status', 'data-value'];
+
+        Object.keys(attributes).forEach(key => {
+            if (safeAttributes.includes(key) || key.startsWith('data-')) {
+                // href ve src için XSS koruması
+                if (key === 'href' || key === 'src') {
+                    const value = attributes[key];
+                    // javascript: protokolünü engelle
+                    if (value && !value.toLowerCase().startsWith('javascript:')) {
+                        element.setAttribute(key, value);
+                    }
+                } else {
+                    element.setAttribute(key, attributes[key]);
+                }
+            }
+        });
+
+        if (textContent) {
+            element.textContent = textContent;
+        }
+
+        return element;
+    },
+
+    /**
      * Format number as currency
      */
     formatCurrency(amount, currency = 'TRY') {
@@ -196,5 +256,4 @@ const Utils = {
     }
 };
 
-// Export for use
-window.Utils = Utils;
+export { Utils };

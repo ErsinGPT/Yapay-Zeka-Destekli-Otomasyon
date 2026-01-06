@@ -3,15 +3,17 @@
  * Dinamik olarak Sidebar ve Header bileşenlerini yükler
  */
 
+import { Auth } from './auth.js';
+import { Sidebar } from './components/sidebar.js';
+import { Header } from './components/header.js';
+
 const LayoutLoader = {
     /**
      * Layout bileşenlerini yükle ve initialize et
      */
     async init() {
         // Auth modülünü initialize et (kullanıcı bilgilerini yükle)
-        if (typeof Auth !== 'undefined' && typeof Auth.init === 'function') {
-            await Auth.init();
-        }
+        await Auth.init();
 
         // Sidebar'ı yükle
         this.loadSidebar();
@@ -67,10 +69,8 @@ const LayoutLoader = {
         const headerHtml = Header.render();
         mainWrapper.insertAdjacentHTML('afterbegin', headerHtml);
 
-        // Header event'lerini initialize et (eğer varsa)
-        if (typeof Header.init === 'function') {
-            Header.init();
-        }
+        // Header event'lerini initialize et
+        Header.init();
     },
 
     /**
@@ -150,6 +150,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     LayoutLoader.showLayout();
 });
 
-// Global erişim için export et
-window.LayoutLoader = LayoutLoader;
+export { LayoutLoader };
 
+// Global erişim için
+window.LayoutLoader = LayoutLoader;

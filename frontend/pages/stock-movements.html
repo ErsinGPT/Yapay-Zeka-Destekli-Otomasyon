@@ -38,29 +38,11 @@
     <!-- Modal Container -->
     <div id="modal-container"></div>
 
-    <!-- Scripts -->
-    <script src="../js/api.js"></script>
-    <script src="../js/utils.js"></script>
-    <script src="../js/auth.js"></script>
-    <script src="../js/components/sidebar.js"></script>
-    <script src="../js/components/header.js"></script>
-    <script src="../js/layout-loader.js"></script>
-    <script>
-        // Auth check
-        document.addEventListener('DOMContentLoaded', function () {
-            if (!API.getToken()) {
-                window.location.href = 'login.html';
-                return;
-            }
-            // Sayfa init fonksiyonunu burada çağır
-        });
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
 
-        // Modal helpers
-        function closeModal(event) {
-            if (event && event.target !== event.currentTarget) return;
-            document.getElementById('modal-container').innerHTML = '';
-        }
-    </script>
+    <!-- ES Module Script -->
+    <script type="module" src="../js/pages/stock-movements.js"></script>
 </body>
 
 </html>
