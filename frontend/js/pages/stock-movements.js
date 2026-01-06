@@ -246,7 +246,7 @@ function openMovementModal() {
     // Açıklama
     const descGroup = Utils.createElement('div', { class: 'form-group' });
     descGroup.appendChild(Utils.createElement('label', { class: 'form-label' }, 'Açıklama'));
-    descGroup.appendChild(Utils.createElement('textarea', { class: 'form-input', name: 'description', rows: '2' }));
+    descGroup.appendChild(Utils.createElement('textarea', { class: 'form-input', name: 'notes', rows: '2' }));
     body.appendChild(descGroup);
 
     form.appendChild(body);

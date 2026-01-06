@@ -412,12 +412,14 @@ class StockMovementCreate(BaseModel):
 class StockMovementResponse(BaseModel):
     """Stock movement response"""
     id: int
-    project_id: int
+    project_id: Optional[int] = None
     product_id: int
     product_name: Optional[str] = None
     movement_type: str
     from_warehouse_id: Optional[int] = None
+    from_warehouse_name: Optional[str] = None
     to_warehouse_id: Optional[int] = None
+    to_warehouse_name: Optional[str] = None
     quantity: Decimal
     unit_cost: Optional[Decimal] = None
     reference_type: Optional[str] = None
